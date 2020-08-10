@@ -1,10 +1,11 @@
 {
-  "name": "uniqore",
+  "name": "uniqor",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "nodemon --config nodemon.json --inspect",
+    "dev": "nodemon --config nodemon.json",
+    "nodemon:debug": "nodemon --config nodemon-debug.json",
     "prebuild": "tslint -c tslint.json -p tsconfig.json --fix",
     "build": "tsc",
     "prestart": "npm run build",
@@ -37,6 +38,7 @@
   "dependencies": {
     "@types/core-js": "^2.5.3",
     "class-validator": "^0.12.2",
+    "glob": "^7.1.6",
     "reflect-metadata": "^0.1.13",
     "type-graphql": "^1.0.0-rc.3"
   }
