@@ -64,9 +64,9 @@
       },
       "join": {
         "type": "oneToOne",
-        "table": "author",
-        "foreign": "author",
-        "local": "id"
+        "table": "authors",
+        "foreign": "id",
+        "local": "author"
       }
     }
   },

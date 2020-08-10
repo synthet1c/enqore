@@ -6,14 +6,15 @@ import {
   GraphQLList,
   GraphQLNonNull,
   GraphQLScalarType,
+  GraphQLBoolean,
 } from 'graphql'
 
-interface Cache {
+export interface Cache {
   name: Map<string, Model>,
   type: Map<Model, any>,
 }
 
-const Cache = {
+export const Cache = {
   name: new Map,
   type: new Map,
 }
@@ -36,12 +37,11 @@ interface ResolveArgs {
 }
 
 interface GraphQLField {
-    type: GraphQLType,
-    resolve?: (parent: Record, args: any) => Promise<any>,
-    args?: ResolveArgs,
-    description?: string,
+  type: GraphQLType,
+  resolve?: (parent: Record, args: any) => Promise<any>,
+  args?: ResolveArgs,
+  description?: string,
 }
-
 
 
 interface Join {
@@ -53,7 +53,20 @@ interface Join {
 }
 
 
-interface SchemaField {
+export interface ModelJSON {
+  name: string,
+  table: string,
+  description: string,
+  order: string[],
+  fields: ModelFields,
+  methods: any
+}
+
+interface ModelFields {
+  [key: string]: ModelField
+}
+
+interface ModelField {
   type: string,
   name: string,
   table: string,
@@ -69,6 +82,7 @@ interface SchemaField {
 }
 
 import { db, Record } from '../db'
+import { trace } from '../utils'
 
 export default class Model {
 
@@ -78,7 +92,7 @@ export default class Model {
   public readonly table: string
 
 
-  constructor(schema: any) {
+  constructor(schema: ModelJSON) {
     this.schema = schema
     this.name = schema.name
     this.table = schema.table
@@ -93,8 +107,8 @@ export default class Model {
       name: this.schema.name,
       fields: () => {
         const _fields: {[key: string]: any} = {}
-        // @ts-ignore
-        for ([key, value] of Object.entries(this.schema.fields)) {
+        const entries = Object.entries(this.schema.fields)
+        for (let [key, value] of entries) {
           // @ts-ignore
           _fields[key] =  this.createGraphQLField(value)
         }
@@ -104,58 +118,84 @@ export default class Model {
   }
 
 
-  createGraphQLField(field: SchemaField): GraphQLField {
-    const type = this.getGraphQLType(field)
+  createGraphQLField(field: ModelField): GraphQLField {
+    const type = this.getGraphQLFieldType(field)
+    const joinType = field?.join?.type
     const _field: GraphQLField = {
       type
     }
 
     // handle data oneToMany relationships
-    if (field?.join?.type === 'oneToMany') {
+    if (joinType === 'oneToMany' || joinType === 'manyToMany') {
       _field.resolve = (parent: Record, args: ResolveArgs) => {
-        return db.find(field.join.table, {
-          [field.join.foreign]: args[field.join.local],
-          ...args
+        // @ts-ignore
+        return db[field.join.table].search({
+          [field.join.foreign]: parent[field.join.local || 'id']
+        })
+      }
+    }
+
+    if (joinType === 'oneToOne') {
+      _field.resolve = (parent: Record, args: ResolveArgs) => {
+        // @ts-ignore
+        return db[field.join.table].find({
+          [field.join.foreign]: parent[field.join.local || 'id'],
         })
       }
     }
 
     if (field.args) {
-      _field.args = Object.keys(field.args).reduce((acc, key) => ({
-        ...acc,
-        [key]: { type: this.getGraphQLType(field.args[key]) }
-      }), {})
+      _field.args = {}
+      for (let [key, value] of Object.entries(field.args)) {
+        _field.args[key] =  {
+          // @ts-ignore
+          type: this.getGraphQLType(value)
+        }
+      }
     }
 
     return _field
   }
 
 
-  getGraphQLType(field: SchemaField): GraphQLType {
-    if (field.join) {
+  getGraphQLFieldType(field: ModelField): GraphQLType {
+    const joinType = field?.join?.type
+    if (joinType === 'oneToMany' || joinType === 'manyToMany') {
       // recursively call getGraphQLType, but change `foreign` so we dont keep nesting
-      return GraphQLList(this.getGraphQLType({
-        ...field,
-        join: false,
-      }))
+      return GraphQLList(this.getGraphQLType(field.type))
     }
+    return this.getGraphQLType(field.type)
+  }
+
+  getGraphQLType(type: string): GraphQLType {
     // generic GraphQLType
-    switch (field.type) {
+    switch (type) {
       case 'string':
+      case 'str':
         return GraphQLString
       case 'integer':
+      case 'int':
         return GraphQLInt
+      case 'boolean':
+        return GraphQLBoolean
       case 'id':
         return GraphQLNonNull(GraphQLInt)
     }
     // dynamic type from Model
-    return this.getDynamicGraphQLType(field)
+    return this.getDynamicGraphQLType(type)
   }
 
 
-  getDynamicGraphQLType(field: SchemaField): GraphQLType {
-    const foreign = Cache.name.get(field.type)
+  getDynamicGraphQLType(type: string): GraphQLType {
+    const foreign = Cache.name.get(type)
+    if (!foreign) {
+      throw new Error(`Cannot find Model ${type}`)
+    }
     return foreign.graphQLType
+  }
+
+  static getType(type: string): GraphQLType {
+    return Cache.name.get(type)?.graphQLType
   }
 
 

@@ -1,7 +1,7 @@
-import {promises as fs} from "fs";
+import { promises as fs } from "fs";
 import path from "path";
-import R from "rambda";
-import {trace} from "./utils";
+import R, { map, where, equals, filter, nth, find } from "rambda";
+import { trace } from "./utils";
 
 export interface Record {
   id: number,
@@ -26,12 +26,13 @@ export interface File {
 }
 
 export const readJSON = (file: string) => (): Promise<Record[]> =>
-  fs.readFile(path.resolve(__dirname, '../data', file), 'utf8')
+  fs.readFile(path.resolve(process.cwd(), 'src/data', file), 'utf8')
     .then((data: any) => JSON.parse(data))
+    // .then(trace('readJSON'))
 
 
 export const writeJSON = (file: string) => (data: any): Promise<any> =>
-  fs.writeFile(path.resolve(__dirname, '../data', file), JSON.stringify(data, null, 2), {
+  fs.writeFile(path.resolve(process.cwd(), 'src/data', file), JSON.stringify(data, null, 2), {
     encoding: 'utf8'
   })
 
@@ -65,15 +66,28 @@ export const updateJSON = (file: string) => (data: any) => readJSON(file)()
 
 
 export const deleteJSON = (file: string) => (data: any) => readJSON(file)()
-  .then(R.filter((row: Record) => row.id !== data.id))
+  .then(R.filter((row: Record) => row[data.key] !== data.value))
   .then(R.tap(writeJSON(file)))
   .then(R.always(data.id))
 
+const unary = (fn: Function) => (x: any) => fn(x)
 
-export const findJSON = (file: string) => (data: any) => readJSON(file)()
-  .then((records: Record[]) =>
-    records.find((record: Record) => record.id === data.id)
-  )
+// query :: {k: v} -> {k: v} -> boolean
+// return true if all properties in the conditions object match the input object
+const query = (conditions: any) => where(map(unary(equals), conditions))
+
+
+// @ts-ignore
+export const searchJSON = (file: string) => (data: any) =>
+  readJSON(file)()
+    .then(filter(unary(query(data))))
+
+
+// @ts-ignore
+export const findJSON = (file: string) => (data: any) =>
+  readJSON(file)()
+    .then(find(unary(query(data))))
+
 
 
 export const crud = (file: string) => ({
@@ -82,6 +96,7 @@ export const crud = (file: string) => ({
   update: updateJSON(file),
   delete: deleteJSON(file),
   find: findJSON(file),
+  search: searchJSON(file),
 })
 
 
@@ -91,3 +106,6 @@ export const db = {
   test: crud('test.json'),
   find: trace('db::find')
 }
+
+
+console.log(db.authors.find({ id: 2 }))
