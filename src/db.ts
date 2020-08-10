@@ -2,6 +2,7 @@ import { promises as fs } from "fs";
 import path from "path";
 import R, { map, where, equals, filter, nth, find } from "rambda";
 import { trace } from "./utils";
+import {ModelJSON} from "./models/Model";
 
 export interface Record {
   id: number,
@@ -25,10 +26,9 @@ export interface File {
   _file: Array<Record>,
 }
 
-export const readJSON = (file: string) => (): Promise<Record[]> =>
-  fs.readFile(path.resolve(process.cwd(), 'src/data', file), 'utf8')
+export const readJSON = (file: string) => (): Promise<ModelJSON|JSON|any> =>
+  fs.readFile(path.resolve(process.cwd(), 'src/', file), 'utf8')
     .then((data: any) => JSON.parse(data))
-    // .then(trace('readJSON'))
 
 
 export const writeJSON = (file: string) => (data: any): Promise<any> =>
@@ -101,10 +101,9 @@ export const crud = (file: string) => ({
 
 
 export const db = {
-  authors: crud('authors.json'),
-  books: crud('books.json'),
-  test: crud('test.json'),
-  find: trace('db::find')
+  authors: crud('data/authors.json'),
+  books: crud('data/books.json'),
+  test: crud('data/test.json'),
 }
 
 
