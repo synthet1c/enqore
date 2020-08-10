@@ -1,0 +1,35 @@
+{
+  "name": "Paragraph",
+  "container": false,
+  "key": "paragraph",
+  "template": "#components/paragraph.vue",
+  "fields": [
+    {
+      "name": "Heading",
+      "type": "heading",
+      "searchable": true,
+      "required": true
+    },
+    {
+      "name": "Heading Size",
+      "type": "fontSize",
+      "searchable": false
+    },
+    {
+      "name": "description",
+      "type": "wysiwyg",
+      "searchable": true,
+      "required": true
+    },
+    {
+      "name": "background",
+      "type": "color",
+      "searchable": false
+    },
+    {
+      "name": "fontSize",
+      "type": "fontSize",
+      "searchable": false
+    }
+  ]
+}

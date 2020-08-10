@@ -1,0 +1,18 @@
+fragment productFields on Product {
+  id,
+  name,
+  price,
+  images {
+    desktop,
+    tablet,
+    mobile,
+  }
+}
+query Product($id: Record) {
+  getProduct($id: Record) {
+    ...productFields
+  }
+  relatedProducts: productsWhere($id: integer[], $count: integer) {
+    ...productFields
+  }
+}

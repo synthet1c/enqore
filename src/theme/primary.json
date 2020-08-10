@@ -1,0 +1,22 @@
+{
+  "extends": "baseTheme",
+  "colors": {
+    "primary": "red",
+    "secondary": "blue",
+    "tertiary": "green"
+  },
+  "theme": {
+    "heading": "$primary",
+    "subheading": "$secondary"
+  },
+  "breakpoints": {
+    "mobile": "40rem",
+    "tablet": "80rem",
+    "desktop": "100rem"
+  },
+  "padding": {
+    "small": "1rem",
+    "medium": "1.5rem",
+    "large": "2rem"
+  }
+}

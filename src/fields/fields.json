@@ -1,0 +1,9 @@
+{
+  "order": [
+    "heading",
+    "headingSize",
+    "description",
+    "color",
+    "fontSize"
+  ]
+}

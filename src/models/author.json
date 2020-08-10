@@ -1,0 +1,55 @@
+{
+  "name": "Author",
+  "extends": "User",
+  "description": "",
+  "order": ["id", "name", "books"],
+  "fields": {
+    "id": {
+      "field": "field",
+      "name": "id",
+      "description": "Author id",
+      "type": "id",
+      "searchable": true,
+      "findable": true,
+      "filterable": true
+    },
+    "name": {
+      "field": "field",
+      "name": "name",
+      "description": "Author name",
+      "type": "string",
+      "searchable": true,
+      "findable": true,
+      "filterable": true
+    },
+    "books": {
+      "field": "relation",
+      "name": "books",
+      "description": "Books written by author",
+      "type": [
+        "Book"
+      ],
+      "searchable": true,
+      "findable": true,
+      "filterable": true,
+      "args": {
+        "id": "int",
+        "name": "string"
+      },
+      "join": {
+        "type": "oneToMany",
+        "table": "book",
+        "foreign": "id"
+      }
+    }
+  },
+  "methods": {
+    "getAuthor": {
+      "name": "getAuthor",
+      "description": "Find an author by id",
+      "args": {
+        "id": "string"
+      }
+    }
+  }
+}

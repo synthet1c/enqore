@@ -1,0 +1,20 @@
+{
+  "type": "string",
+  "input": "select",
+  "required": false,
+  "options": [
+    {
+      "name":  "small",
+      "value": "small"
+    },
+    {
+      "name":  "medium",
+      "value": "medium"
+    },
+    {
+      "name":  "large",
+      "value": "large"
+    }
+  ],
+  "length": 120
+}

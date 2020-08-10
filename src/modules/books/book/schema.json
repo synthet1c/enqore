@@ -1,0 +1,82 @@
+{
+  "name": "Book",
+  "table": "book",
+  "description": "Book",
+  "order": ["id", "title", "publisher", "description", "pages", "author"],
+  "fields": {
+    "id": {
+      "field": "id",
+      "name": "id",
+      "description": "Author id",
+      "type": "id",
+      "searchable": true,
+      "findable": true,
+      "filterable": true,
+      "primary": true
+    },
+    "title": {
+      "field": "text",
+      "name": "title",
+      "description": "Book title",
+      "type": "string",
+      "searchable": true,
+      "findable": true,
+      "filterable": true
+    },
+    "publisher": {
+      "field": "text",
+      "name": "publisher",
+      "description": "Book publisher",
+      "type": "string",
+      "searchable": true,
+      "findable": true,
+      "filterable": true
+    },
+    "description": {
+      "field": "wysiwyg",
+      "name": "description",
+      "description": "Book description",
+      "type": "string",
+      "searchable": true,
+      "findable": false,
+      "filterable": false
+    },
+    "pages": {
+      "field": "wysiwyg",
+      "name": "pages",
+      "description": "Book page count",
+      "type": "integer",
+      "searchable": false,
+      "findable": false,
+      "filterable": false
+    },
+    "author": {
+      "field": "relation",
+      "name": "author",
+      "description": "Author that wrote the book",
+      "type": "Author",
+      "searchable": false,
+      "findable": false,
+      "filterable": false,
+      "args": {
+        "id": "int",
+        "name": "string"
+      },
+      "join": {
+        "type": "oneToOne",
+        "table": "author",
+        "foreign": "author",
+        "local": "id"
+      }
+    }
+  },
+  "methods": {
+    "getBook": {
+      "name": "getBook",
+      "description": "Find a book by id",
+      "args": {
+        "id": "string"
+      }
+    }
+  }
+}

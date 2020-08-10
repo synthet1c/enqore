@@ -1,0 +1,19 @@
+{
+  "type": "string",
+  "input": "headingSize",
+  "options": [
+    {
+      "name":  "small",
+      "value": "small"
+    },
+    {
+      "name":  "medium",
+      "value": "medium"
+    },
+    {
+      "name":  "large",
+      "value": "large"
+    }
+  ],
+  "length": 120
+}

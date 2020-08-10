@@ -1,0 +1,15 @@
+{
+  "name": "Section",
+  "container": true,
+  "key": "section",
+  "fields": [
+    {
+      "name": "padding",
+      "type": "size"
+    },
+    {
+      "name": "columns",
+      "type": "columns"
+    }
+  ]
+}

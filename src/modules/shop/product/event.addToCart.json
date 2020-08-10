@@ -1,0 +1,32 @@
+{
+  "event": "applyDiscount",
+  "before": "cart.addProduct",
+  "where": [
+    {
+      "user.group.name": [
+        "equals",
+        [
+          "gold"
+        ]
+      ],
+      "product.category": [
+        "in",
+        [
+          "radios",
+          "mp3players"
+        ]
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "type": "discount",
+      "total": [
+        "minus",
+        [
+          "20%"
+        ]
+      ]
+    }
+  ]
+}

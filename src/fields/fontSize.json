@@ -1,0 +1,22 @@
+{
+  "type": "string",
+  "name": "Font size",
+  "key": "fontSize",
+  "input": {
+    "type": "select",
+    "options": [
+      {
+        "name":  "small",
+        "value": "small"
+      },
+      {
+        "name":  "medium",
+        "value": "medium"
+      },
+      {
+        "name":  "large",
+        "value": "large"
+      }
+    ]
+  }
+}

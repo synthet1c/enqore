@@ -1,0 +1,14 @@
+{
+  "name": "Theme",
+  "type": "text",
+  "description": "Component theme",
+  "input": {
+    "type": "select",
+    "options": {
+      "light": "Light",
+      "dark": "Dark",
+      "primary": "primary",
+      "secondary": "Secondary"
+    }
+  }
+}
