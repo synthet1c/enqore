@@ -1,0 +1,52 @@
+{
+  "name": "Publisher",
+  "table": "publishers",
+  "extends": "User",
+  "description": "",
+  "order": ["id", "name", "books"],
+  "pagination": {
+    "perPage": 12,
+    "order": "asc",
+    "sort": "id"
+  },
+  "fields": {
+    "id": {
+      "field": "id",
+      "name": "id",
+      "description": "Publisher id",
+      "type": "id",
+      "searchable": true,
+      "findable": true,
+      "filterable": true,
+      "required": true
+    },
+    "name": {
+      "field": "text",
+      "name": "name",
+      "description": "Publisher name",
+      "type": "string",
+      "searchable": true,
+      "findable": true,
+      "filterable": true
+    },
+    "books": {
+      "field": "relation",
+      "name": "books",
+      "description": "Books published by publisher",
+      "type": "Book",
+      "searchable": true,
+      "findable": true,
+      "filterable": true,
+      "args": {
+        "id": "int",
+        "name": "string"
+      },
+      "join": {
+        "type": "manyToMany",
+        "table": "books",
+        "foreign": "id",
+        "local": "books"
+      }
+    }
+  }
+}

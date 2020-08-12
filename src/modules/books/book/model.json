@@ -27,10 +27,16 @@
       "field": "text",
       "name": "publisher",
       "description": "Book publisher",
-      "type": "string",
+      "type": "Publisher",
       "searchable": true,
       "findable": true,
-      "filterable": true
+      "filterable": true,
+      "join": {
+        "type": "oneToOne",
+        "table": "publishers",
+        "foreign": "id",
+        "local": "publisher"
+      }
     },
     "description": {
       "field": "wysiwyg",
@@ -67,15 +73,6 @@
         "table": "authors",
         "foreign": "id",
         "local": "author"
-      }
-    }
-  },
-  "methods": {
-    "getBook": {
-      "name": "getBook",
-      "description": "Find a book by id",
-      "args": {
-        "id": "string"
       }
     }
   }

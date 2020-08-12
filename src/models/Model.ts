@@ -44,7 +44,7 @@ export interface GraphQLField {
 }
 
 export interface Join {
-  type: 'oneToMany' | 'manyToMany' | 'oneToOne'
+  type: 'oneToMany' | 'manyToMany' | 'oneToOne' | 'manyToOne'
   table: string
   foreign: string
   local: string
@@ -125,7 +125,7 @@ export default class Model {
     }
 
     // handle data oneToMany relationships
-    if (joinType === 'oneToMany' || joinType === 'manyToMany') {
+    if (joinType === 'oneToMany') {
       _field.resolve = (parent: Record, args: ResolveArgs) => {
         // @ts-ignore
         return db[field.join.table].search({
@@ -134,7 +134,25 @@ export default class Model {
       }
     }
 
-    if (joinType === 'oneToOne') {
+    // handle data manyToMany relationships
+    else if (joinType === 'manyToMany') {
+      _field.resolve = (parent: Record, args: ResolveArgs) => {
+        // @ts-ignore
+        return db[field.join.table].searchIn({
+          [field.join.foreign]: parent[field.join.local],
+        })
+      }
+    }
+
+    // handle data manyToOne relationships
+    else if (joinType === 'manyToOne') {
+      _field.resolve = (parent: Record, args: ResolveArgs) => {
+        // @ts-ignore
+        return db[field.join.table].findIn({
+          [field.join.foreign]: parent[field.join.local],
+        })
+      }
+    } else if (joinType === 'oneToOne') {
       _field.resolve = (parent: Record, args: ResolveArgs) => {
         // @ts-ignore
         return db[field.join.table].find({

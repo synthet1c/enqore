@@ -1,6 +1,6 @@
 import { promises as fs } from 'fs'
 import path from 'path'
-import R, { map, where, equals, filter, nth, find } from 'rambda'
+import R, { map, where, equals, filter, nth, find, compose } from 'rambda'
 import { trace } from './utils'
 import { ModelJSON } from './models/Model'
 
@@ -92,6 +92,29 @@ export const searchJSON = (file: string) => (data: any) =>
 export const findJSON = (file: string) => (data: any) =>
   readJSON(file)().then(find(unary(query(data))))
 
+// { id: [1, 2, 3 ]}
+export const searchInJSON = (file: string) => (data: any) =>
+  readJSON(file)().then(
+    filter((record: Record) => {
+      return Object.entries(
+        data
+      ).every(([key, values]: [string, any[]]): boolean =>
+        values.includes(record[key])
+      )
+    })
+  )
+
+export const findInJSON = (file: string) => (data: any) =>
+  readJSON(file)().then(
+    filter((record: Record) => {
+      return Object.entries(
+        data
+      ).every(([key, values]: [string, any[]]): boolean =>
+        values.includes(record[key])
+      )
+    })
+  )
+
 export const crud = (file: string) => ({
   read: readJSON(file),
   create: appendJSON(file),
@@ -99,11 +122,14 @@ export const crud = (file: string) => ({
   delete: deleteJSON(file),
   find: findJSON(file),
   search: searchJSON(file),
+  searchIn: searchInJSON(file),
+  findIn: findInJSON(file),
 })
 
 export const db = {
   authors: crud('data/authors.json'),
   books: crud('data/books.json'),
+  publishers: crud('data/publishers.json'),
   test: crud('data/test.json'),
 }
 
