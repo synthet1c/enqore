@@ -9,7 +9,7 @@ import {
   initRequestParser,
   initRoutes,
   initSession,
-} from "./init";
+} from './init'
 
 const app: Server = express()
 

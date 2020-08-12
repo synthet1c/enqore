@@ -1,5 +1,5 @@
 import express from 'express'
-import { Router } from 'express/lib/router';
+import { Router } from 'express/lib/router'
 
 const router: Router = express.Router()
 

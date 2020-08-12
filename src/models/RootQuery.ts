@@ -1,16 +1,15 @@
-import Model, {ModelJSON, Cache, ModelFields, ResolveArgs} from "./Model";
+import Model, { ModelJSON, Cache, ModelFields, ResolveArgs } from './Model'
 import { Record, db } from '../db'
-import {GraphQLInt, GraphQLList, GraphQLString, GraphQLNonNull} from "graphql";
+import { GraphQLInt, GraphQLList, GraphQLString, GraphQLNonNull } from 'graphql'
 // @ts-ignore
 import pluralize, { singular } from 'pluralize'
 // @ts-ignore
 import capitalize from 'capitalize'
-import Schema from "./Schema";
+import Schema from './Schema'
 
-const _cache: Map<string,RootQuery> = new Map
+const _cache: Map<string, RootQuery> = new Map()
 
 export default class RootQuery {
-
   private readonly schema: any
   public readonly name: string
   public readonly table: string
@@ -54,19 +53,18 @@ export default class RootQuery {
   }
 
   private generateRootQueries(): void {
-
     const args: any = {}
 
     this.findable.forEach(key => {
       if (!this.schema.fields[key].join) {
         args[key] = {
           type: Schema.getGraphQLScalarType(this.schema.fields[key].type),
-          description: `Get by ${key}`
+          description: `Get by ${key}`,
         }
       }
     })
 
-  const pagination: any = {
+    const pagination: any = {
       perPage: { type: GraphQLInt },
       start: { type: GraphQLInt },
       order: { type: GraphQLString },
@@ -118,7 +116,7 @@ export default class RootQuery {
         args[key] = {
           type: modelField?.required
             ? GraphQLNonNull(Schema.getGraphQLScalarType(modelField.type))
-            : Schema.getGraphQLScalarType(modelField.type)
+            : Schema.getGraphQLScalarType(modelField.type),
         }
       }
     }
@@ -130,7 +128,7 @@ export default class RootQuery {
       resolve: (parent: Record, args: ResolveArgs) => {
         // @ts-ignore
         return db[this.schema.table].create(args)
-      }
+      },
     }
 
     this.mutations[`update${fieldName}`] = {
@@ -140,17 +138,18 @@ export default class RootQuery {
       resolve: (parent: Record, args: ResolveArgs) => {
         // @ts-ignore
         return db[this.schema.table].update(args)
-      }
+      },
     }
 
     this.mutations[`upsert${fieldName}`] = {
       type: Model.getType(this.schema.name),
       description: `Update or insert a ${schemaName}`,
       args,
+
       resolve: (parent: Record, args: ResolveArgs) => {
         // @ts-ignore
         return db[this.schema.table].create(args)
-      }
+      },
     }
   }
 }

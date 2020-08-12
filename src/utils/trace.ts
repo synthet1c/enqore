@@ -3,4 +3,3 @@ export const trace = (tag: string) => (...xs: any[]) => {
   console.log(tag, ...xs)
   return xs[0]
 }
-

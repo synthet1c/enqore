@@ -11,18 +11,17 @@ import {
 } from 'graphql'
 
 export interface Cache {
-  name: Map<string, Model>,
-  type: Map<Model, any>,
+  name: Map<string, Model>
+  type: Map<Model, any>
 }
 
 export const Cache = {
-  name: new Map,
-  type: new Map,
+  name: new Map(),
+  type: new Map(),
 }
 
-
 type GraphQLType =
-  GraphQLScalarType
+  | GraphQLScalarType
   | GraphQLObjectType
   | GraphQLNonNull<any>
   | GraphQLList<any>
@@ -38,28 +37,27 @@ export interface ResolveArgs {
 }
 
 export interface GraphQLField {
-  type: GraphQLType,
-  resolve?: (parent: Record, args: any) => Promise<any>,
-  args?: ResolveArgs,
-  description?: string,
+  type: GraphQLType
+  resolve?: (parent: Record, args: any) => Promise<any>
+  args?: ResolveArgs
+  description?: string
 }
 
-
 export interface Join {
-  type: 'oneToMany' | 'manyToMany' | 'oneToOne',
-  table: string,
-  foreign: string,
-  local: string,
+  type: 'oneToMany' | 'manyToMany' | 'oneToOne'
+  table: string
+  foreign: string
+  local: string
+
   [key: string]: any
 }
 
-
 export interface ModelJSON {
-  name: string,
-  table: string,
-  description: string,
-  order: string[],
-  fields: ModelFields,
+  name: string
+  table: string
+  description: string
+  order: string[]
+  fields: ModelFields
   methods: any
 }
 
@@ -68,33 +66,31 @@ export interface ModelFields {
 }
 
 export interface ModelField {
-  type: string,
-  name: string,
-  table: string,
-  field: string,
-  list?: boolean,
-  required?: boolean,
-  description?: string,
-  searchable?: boolean,
-  findable?: boolean,
-  filterable?: boolean,
-  foreign?: boolean,
-  args?: any | FieldArgs, // fixme: need to fix FieldArgs interface
-  join?: any | Join, // fixme: need to fix Join interface
+  type: string
+  name: string
+  table: string
+  field: string
+  list?: boolean
+  required?: boolean
+  description?: string
+  searchable?: boolean
+  findable?: boolean
+  filterable?: boolean
+  foreign?: boolean
+  args?: any | FieldArgs // fixme: need to fix FieldArgs interface
+  join?: any | Join // fixme: need to fix Join interface
 }
 
 import { db, Record } from '../db'
 import { trace } from '../utils'
-import RootQuery from "./RootQuery";
+import RootQuery from './RootQuery'
 
 export default class Model {
-
   private readonly schema: any
   // private readonly rootQuery: any
   public readonly graphQLType: GraphQLType
   public readonly name: string
   public readonly table: string
-
 
   constructor(schema: ModelJSON) {
     this.schema = schema
@@ -106,28 +102,26 @@ export default class Model {
     Cache.name.set(this.name, this)
   }
 
-
   initGraphQL(): GraphQLType {
     return new GraphQLObjectType({
       name: this.schema.name,
       fields: () => {
-        const _fields: {[key: string]: any} = {}
+        const _fields: { [key: string]: any } = {}
         const entries = Object.entries(this.schema.fields)
         for (let [key, value] of entries) {
           // @ts-ignore
-          _fields[key] =  this.createGraphQLField(value)
+          _fields[key] = this.createGraphQLField(value)
         }
         return _fields
-      }
+      },
     })
   }
-
 
   createGraphQLField(field: ModelField): GraphQLField {
     const type = this.getGraphQLFieldType(field)
     const joinType = field?.join?.type
     const _field: GraphQLField = {
-      type
+      type,
     }
 
     // handle data oneToMany relationships
@@ -135,7 +129,7 @@ export default class Model {
       _field.resolve = (parent: Record, args: ResolveArgs) => {
         // @ts-ignore
         return db[field.join.table].search({
-          [field.join.foreign]: parent[field.join.local || 'id']
+          [field.join.foreign]: parent[field.join.local || 'id'],
         })
       }
     }
@@ -152,16 +146,15 @@ export default class Model {
     if (field.args) {
       _field.args = {}
       for (let [key, value] of Object.entries(field.args)) {
-        _field.args[key] =  {
+        _field.args[key] = {
           // @ts-ignore
-          type: this.getGraphQLType(value)
+          type: this.getGraphQLType(value),
         }
       }
     }
 
     return _field
   }
-
 
   getGraphQLFieldType(field: ModelField): GraphQLType {
     const joinType = field?.join?.type
@@ -190,7 +183,6 @@ export default class Model {
     return this.getDynamicGraphQLType(type)
   }
 
-
   getDynamicGraphQLType(type: string): GraphQLType {
     const foreign = Cache.name.get(type)
     if (!foreign) {
@@ -207,8 +199,5 @@ export default class Model {
     return Cache.name.entries()
   }
 
-
-  initElasticSearch() {
-
-  }
+  initElasticSearch() {}
 }

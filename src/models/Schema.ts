@@ -1,18 +1,22 @@
-import Model, {ModelJSON} from "./Model";
-import RootQuery from "./RootQuery";
-import {GraphQLBoolean, GraphQLInt, GraphQLString, GraphQLScalarType} from "graphql";
+import Model, { ModelJSON } from './Model'
+import RootQuery from './RootQuery'
+import {
+  GraphQLBoolean,
+  GraphQLInt,
+  GraphQLString,
+  GraphQLScalarType,
+} from 'graphql'
 
-const _cache: Map<string,Schema> = new Map
+const _cache: Map<string, Schema> = new Map()
 
 export default class Schema {
-
   private readonly schema: ModelJSON
   public readonly name: string
   public readonly table: string
   private readonly model: Model
   private readonly rootQuery: RootQuery
 
-  private static readonly cache: Map<string,Schema> = new Map
+  private static readonly cache: Map<string, Schema> = new Map()
 
   constructor(json: ModelJSON) {
     this.schema = json
@@ -38,27 +42,28 @@ export default class Schema {
     return Schema.cache.entries()
   }
 
-  static getSchema(name: string): Schema|void {
+  static getSchema(name: string): Schema | void {
     return Schema.cache.get(name)
   }
 
-  static getModel(name: string): Model|void {
-    if(Schema.cache.has(name))
-      return Schema.cache.get(name).model
+  static getModel(name: string): Model | void {
+    if (Schema.cache.has(name)) return Schema.cache.get(name).model
     return null
   }
 
-  static getRootQuery(name: string): RootQuery|void {
-    if(Schema.cache.has(name))
-      return Schema.cache.get(name).rootQuery
+  static getRootQuery(name: string): RootQuery | void {
+    if (Schema.cache.has(name)) return Schema.cache.get(name).rootQuery
     return null
   }
 
   static getRootQueryObject(): any {
-    return Array.from(Schema.cache.entries()).reduce((acc, [name, schema]) => ({
-      ...acc,
-      ...schema.getRootQuery().getRootQueries()
-    }), {})
+    return Array.from(Schema.cache.entries()).reduce(
+      (acc, [name, schema]) => ({
+        ...acc,
+        ...schema.getRootQuery().getRootQueries(),
+      }),
+      {}
+    )
   }
 
   static getGraphQLScalarType(type: string): GraphQLScalarType {
@@ -75,5 +80,4 @@ export default class Schema {
         return GraphQLInt
     }
   }
-
 }

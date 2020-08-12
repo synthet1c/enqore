@@ -59,14 +59,5 @@
         "local": "id"
       }
     }
-  },
-  "methods": {
-    "getAuthor": {
-      "name": "getAuthor",
-      "description": "Find an author by id",
-      "args": {
-        "id": "string"
-      }
-    }
   }
 }
