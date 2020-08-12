@@ -1,14 +1,23 @@
-import express from 'express'
+import express, { Server } from 'express'
 
-import initializeModels from "./initialize/models";
-import initializeGraphql from './initialize/graphql'
-import initializeRoutes from "./initialize/routes";
-import initializeListener from './initialize/listener';
+import {
+  initEnvironmentVariables,
+  initGraphql,
+  initListener,
+  initModels,
+  initSchema,
+  initRequestParser,
+  initRoutes,
+  initSession,
+} from "./init";
 
-const app = express()
+const app: Server = express()
 
 Promise.resolve(app)
-  .then(initializeModels)
-  .then(initializeGraphql)
-  .then(initializeRoutes)
-  .then(initializeListener)
+  .then(initEnvironmentVariables)
+  .then(initRequestParser)
+  .then(initSession)
+  .then(initSchema)
+  .then(initGraphql)
+  .then(initRoutes)
+  .then(initListener)

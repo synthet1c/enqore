@@ -6,9 +6,9 @@ import _glob from 'glob'
 import util from 'util'
 const glob = util.promisify(_glob)
 
-export default async function initializeModels(app: Server) {
+export default async function initModels(app: Server) {
 
-  const files = await glob('**/*/model.json', {
+  const files: string[] = await glob('**/*/model.json', {
     cwd: path.join(process.cwd(), './src')
   })
 

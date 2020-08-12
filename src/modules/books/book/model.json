@@ -1,6 +1,6 @@
 {
   "name": "Book",
-  "table": "book",
+  "table": "books",
   "description": "Book",
   "order": ["id", "title", "publisher", "description", "pages", "author"],
   "fields": {

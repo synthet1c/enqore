@@ -1,9 +1,24 @@
 {
   "name": "Author",
-  "table": "author",
+  "table": "authors",
   "extends": "User",
   "description": "",
   "order": ["id", "name", "books"],
+  "pagination": {
+    "perPage": 12,
+    "order": "asc",
+    "sort": "id"
+  },
+  "permissions": {
+    "create": true,
+    "read": true,
+    "update": true,
+    "delete": true
+  },
+  "access": {
+    "groups": [8],
+    "users": [1]
+  },
   "fields": {
     "id": {
       "field": "field",
@@ -12,7 +27,8 @@
       "type": "id",
       "searchable": true,
       "findable": true,
-      "filterable": true
+      "filterable": true,
+      "required": true
     },
     "name": {
       "field": "field",
@@ -21,7 +37,8 @@
       "type": "string",
       "searchable": true,
       "findable": true,
-      "filterable": true
+      "filterable": true,
+      "required": true
     },
     "books": {
       "field": "relation",

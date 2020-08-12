@@ -7,6 +7,7 @@ import {
   GraphQLNonNull,
   GraphQLScalarType,
   GraphQLBoolean,
+  GraphQLNullableType,
 } from 'graphql'
 
 export interface Cache {
@@ -26,17 +27,17 @@ type GraphQLType =
   | GraphQLNonNull<any>
   | GraphQLList<any>
 
-interface FieldArgs {
+export interface FieldArgs {
   [key: string]: {
     type: GraphQLType
   }
 }
 
-interface ResolveArgs {
+export interface ResolveArgs {
   [key: string]: any
 }
 
-interface GraphQLField {
+export interface GraphQLField {
   type: GraphQLType,
   resolve?: (parent: Record, args: any) => Promise<any>,
   args?: ResolveArgs,
@@ -44,7 +45,7 @@ interface GraphQLField {
 }
 
 
-interface Join {
+export interface Join {
   type: 'oneToMany' | 'manyToMany' | 'oneToOne',
   table: string,
   foreign: string,
@@ -62,16 +63,17 @@ export interface ModelJSON {
   methods: any
 }
 
-interface ModelFields {
+export interface ModelFields {
   [key: string]: ModelField
 }
 
-interface ModelField {
+export interface ModelField {
   type: string,
   name: string,
   table: string,
   field: string,
   list?: boolean,
+  required?: boolean,
   description?: string,
   searchable?: boolean,
   findable?: boolean,
@@ -83,10 +85,12 @@ interface ModelField {
 
 import { db, Record } from '../db'
 import { trace } from '../utils'
+import RootQuery from "./RootQuery";
 
 export default class Model {
 
   private readonly schema: any
+  // private readonly rootQuery: any
   public readonly graphQLType: GraphQLType
   public readonly name: string
   public readonly table: string
@@ -97,6 +101,7 @@ export default class Model {
     this.name = schema.name
     this.table = schema.table
     this.graphQLType = this.initGraphQL()
+    // this.rootQuery = new RootQuery(schema)
 
     Cache.name.set(this.name, this)
   }
@@ -179,7 +184,7 @@ export default class Model {
       case 'boolean':
         return GraphQLBoolean
       case 'id':
-        return GraphQLNonNull(GraphQLInt)
+        return GraphQLInt
     }
     // dynamic type from Model
     return this.getDynamicGraphQLType(type)
@@ -196,6 +201,10 @@ export default class Model {
 
   static getType(type: string): GraphQLType {
     return Cache.name.get(type)?.graphQLType
+  }
+
+  static entries(type: string): IterableIterator<[any, any]> {
+    return Cache.name.entries()
   }
 
 
