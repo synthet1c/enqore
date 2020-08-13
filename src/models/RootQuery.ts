@@ -136,24 +136,13 @@ export default class RootQuery {
         where: ORM.createSearchFields(this.schema, this.schema.fields),
       },
       resolve: (parent: Record, args: ResolveArgs) => {
-        console.log(
-          '~',
-          JSON.stringify(
-            {
-              // parent,
-              args,
-              // schema: this.schema,
-            },
-            null,
-            2
-          )
-        )
+        console.log('~', JSON.stringify(args, null, 2))
+        if (args.where) {
+          // @ts-ignore
+          return db[this.schema.table].where(args)
+        }
         // @ts-ignore
-        return db[this.schema.table].search({
-          // fixme: add pagination to database query
-          // ...this.schema.pagination,
-          ...args,
-        })
+        return db[this.schema.table].search(args)
       },
     }
 

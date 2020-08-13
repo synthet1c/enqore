@@ -1,8 +1,9 @@
 import { promises as fs } from 'fs'
 import path from 'path'
-import R, { map, where, equals, filter, nth, find, compose } from 'rambda'
+import * as R from 'rambda'
 import { trace } from './utils'
 import { ModelJSON } from './models/Model'
+
 
 export interface Record {
   id: number
@@ -82,20 +83,20 @@ const unary = (fn: Function) => (x: any) => fn(x)
 
 // query :: {k: v} -> {k: v} -> boolean
 // return true if all properties in the conditions object match the input object
-const query = (conditions: any) => where(map(unary(equals), conditions))
+const query = (conditions: any) => R.where(R.map(unary(R.equals), conditions))
 
 // @ts-ignore
 export const searchJSON = (file: string) => (data: any) =>
-  readJSON(file)().then(filter(unary(query(data))))
+  readJSON(file)().then(R.filter(unary(query(data))))
 
 // @ts-ignore
 export const findJSON = (file: string) => (data: any) =>
-  readJSON(file)().then(find(unary(query(data))))
+  readJSON(file)().then(R.find(unary(query(data))))
 
 // { id: [1, 2, 3 ]}
 export const searchInJSON = (file: string) => (data: any) =>
   readJSON(file)().then(
-    filter((record: Record) => {
+    R.filter((record: Record) => {
       return Object.entries(
         data
       ).every(([key, values]: [string, any[]]): boolean =>
@@ -106,7 +107,7 @@ export const searchInJSON = (file: string) => (data: any) =>
 
 export const findInJSON = (file: string) => (data: any) =>
   readJSON(file)().then(
-    filter((record: Record) => {
+    R.filter((record: Record) => {
       return Object.entries(
         data
       ).every(([key, values]: [string, any[]]): boolean =>
@@ -114,6 +115,47 @@ export const findInJSON = (file: string) => (data: any) =>
       )
     })
   )
+
+const spec = {
+  id: { _eq: 1 },
+  name: { _contains: 'andrew' },
+}
+
+const _conditions: any = {
+  // _or: R.either(R.map(cond(value)(obj)),
+  _neq: R.complement(R.equals),
+  _in: R.includes,
+  _lt: (x: number) => (y: number): boolean => y < x,
+  _lte: (x: number) => (y: number): boolean => y <= x,
+  _gt: (x: number) => (y: number): boolean => y > x,
+  _gte: (x: number) => (y: number): boolean => y >= x,
+  _reg: (x: string) => R.test(new RegExp(x)),
+  _startsWith: R.startsWith,
+  _endsWith: R.endsWith,
+  _contains: (x: string) => R.test(new RegExp(x)),
+}
+
+function getCondition(condition: string): Function {
+  return _conditions[condition]
+}
+
+
+const cond = (spec: any) => (obj: any) => {
+  const _where: any = {}
+  for (const [key, rule] of Object.entries(spec)) {
+    const conditions: any[] = []
+    for (const [directive, value] of Object.entries(rule)) {
+      conditions.push(
+        getCondition(directive)(value)
+      )
+    }
+    _where[key] = R.allPass(conditions)
+  }
+  return R.where(_where, obj)
+}
+
+export const whereJSON = (file: string) => (data: any) =>
+  readJSON(file)().then(R.filter(cond(data.where)))
 
 export const crud = (file: string) => ({
   read: readJSON(file),
@@ -124,6 +166,7 @@ export const crud = (file: string) => ({
   search: searchJSON(file),
   searchIn: searchInJSON(file),
   findIn: findInJSON(file),
+  where: whereJSON(file),
 })
 
 export const db = {

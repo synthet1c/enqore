@@ -69,7 +69,7 @@ export default class ORM {
           _or: { type: GraphQLList(WhereType) },
         }
 
-        if (field.type === 'int' || field.join) {
+        if (field.type === 'id' || field.type === 'int' || field.join) {
           searchFields = {
             ...searchFields,
             _in: { type: GraphQLList(type) },
