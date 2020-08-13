@@ -4,7 +4,6 @@ import * as R from 'rambda'
 import { trace } from './utils'
 import { ModelJSON } from './models/Model'
 
-
 export interface Record {
   id: number
 
@@ -129,25 +128,52 @@ const _conditions: any = {
   _lte: (x: number) => (y: number): boolean => y <= x,
   _gt: (x: number) => (y: number): boolean => y > x,
   _gte: (x: number) => (y: number): boolean => y >= x,
-  _reg: (x: string) => R.test(new RegExp(x)),
+  _reg: (x: string) => R.test(new RegExp(x, 'gim')),
   _startsWith: R.startsWith,
   _endsWith: R.endsWith,
-  _contains: (x: string) => R.test(new RegExp(x)),
+  _contains: (x: string) => R.test(new RegExp(`[^\\b]${x}[^\\b]`, 'gim')),
 }
 
 function getCondition(condition: string): Function {
   return _conditions[condition]
 }
 
+interface SearchField {
+  _or: Spec[]
+  _and: Spec[]
+  _eq: number
+  _neq: number
+  _in: any[]
+  _gt: number
+  _gte: number
+  _lt: number
+  _lte: number
+  _reg: string | RegExp
+  _startsWith: string
+  _endsWith: string
+  _contains: string
+}
 
-const cond = (spec: any) => (obj: any) => {
+interface Spec {
+  [key: string]: any
+  _or: Spec[]
+  _and: Spec[]
+}
+
+const cond = (spec: Spec) => (obj: any): boolean => {
   const _where: any = {}
   for (const [key, rule] of Object.entries(spec)) {
+    if (key === '_or') return R.anyPass(R.map(cond)(rule))(obj)
+    if (key === '_and') return R.allPass(R.map(cond)(rule))(obj)
+      // return R.anyPass([(x: number) => x > 2, (y: number) => y < 4])(1)
     const conditions: any[] = []
     for (const [directive, value] of Object.entries(rule)) {
-      conditions.push(
-        getCondition(directive)(value)
-      )
+      if (directive === '_or') {
+        // @ts-ignore
+        conditions.push(R.anyPass(R.map(cond)(value))(obj))
+      } else {
+        conditions.push(getCondition(directive)(value))
+      }
     }
     _where[key] = R.allPass(conditions)
   }
