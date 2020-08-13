@@ -1,0 +1,38 @@
+query {
+  publishers(where: {
+    and: [
+      { name: { reg: "andrew" } }
+      { id: { reg: "andrew" } }
+    ],
+    or: [
+      { name: { reg: "andrew" } }
+    ],
+    id: 2,
+    publisher: { in: [1, 2, 3]},
+  }) {
+    id,
+    name,
+  }
+}
+
+
+query {
+  publishers(
+    where: {
+      _and:[
+        {
+          books: {
+            _or:[
+              { id: { _in:[1] } }
+            ]
+          }
+        }
+      ]
+    }
+  ){
+    name,
+    id
+  }
+}
+
+query{publishers(where:{name:{_or:[{name:{_reg:"/test/"}}]}}){name,id}}

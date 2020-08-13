@@ -1,11 +1,18 @@
 import Model, { ModelJSON, Cache, ModelFields, ResolveArgs } from './Model'
 import { Record, db } from '../db'
-import { GraphQLInt, GraphQLList, GraphQLString, GraphQLNonNull } from 'graphql'
+import {
+  GraphQLInt,
+  GraphQLList,
+  GraphQLString,
+  GraphQLNonNull,
+  GraphQLInputObjectType,
+} from 'graphql'
 // @ts-ignore
 import pluralize, { singular } from 'pluralize'
 // @ts-ignore
 import capitalize from 'capitalize'
 import Schema from './Schema'
+import ORM from './ORM'
 
 const _cache: Map<string, RootQuery> = new Map()
 
@@ -19,7 +26,6 @@ export default class RootQuery {
   private mutationFields: any[] = []
   private getters: any = {}
   private mutations: any = {}
-  private rootQueries: any = {}
 
   constructor(schema: ModelJSON) {
     this.schema = schema
@@ -54,14 +60,54 @@ export default class RootQuery {
 
   private generateRootQueries(): void {
     const args: any = {}
+    const whereTypes: any = {}
 
     this.findable.forEach(key => {
-      if (!this.schema.fields[key].join) {
+      const field = this.schema.fields[key]
+      const type = Schema.getGraphQLScalarType(field.type)
+
+      if (!field.join) {
         args[key] = {
-          type: Schema.getGraphQLScalarType(this.schema.fields[key].type),
+          type,
+          description: `Get by ${key}`,
+        }
+      } else if (field?.join?.type === 'manyToMany') {
+        args[key] = {
+          type: GraphQLList(GraphQLInt),
           description: `Get by ${key}`,
         }
       }
+
+      /*
+      const SearchFieldType = new GraphQLInputObjectType({
+        name: 'searchFields',
+        description: 'filter your results',
+        fields: () => searchFields,
+      })
+
+      let searchFields: any = {
+        _eq: { type },
+        _neq: { type },
+        _and: { type: SearchFieldType },
+        _or: { type: SearchFieldType },
+      }
+
+      if (field.type === 'int') {
+        searchFields = {
+          ...searchFields,
+          _in: { type: GraphQLList(type) },
+          _gt: { type },
+          _lt: { type },
+        }
+      }
+
+      if (field.type === 'string') {
+        searchFields = {
+          ...searchFields,
+          _reg: { type },
+        }
+      }
+      */
     })
 
     const pagination: any = {
@@ -87,9 +133,21 @@ export default class RootQuery {
       args: {
         ...pagination,
         ...args,
+        where: ORM.createSearchFields(this.schema, this.schema.fields),
       },
       resolve: (parent: Record, args: ResolveArgs) => {
-        console.log('args', args)
+        console.log(
+          '~',
+          JSON.stringify(
+            {
+              // parent,
+              args,
+              // schema: this.schema,
+            },
+            null,
+            2
+          )
+        )
         // @ts-ignore
         return db[this.schema.table].search({
           // fixme: add pagination to database query

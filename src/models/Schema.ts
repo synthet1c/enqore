@@ -1,10 +1,12 @@
-import Model, { ModelJSON } from './Model'
+import Model, { ModelFields, ModelJSON, ModelField } from './Model'
 import RootQuery from './RootQuery'
 import {
   GraphQLBoolean,
   GraphQLInt,
   GraphQLString,
   GraphQLScalarType,
+  GraphQLInputObjectType,
+  GraphQLList,
 } from 'graphql'
 
 const _cache: Map<string, Schema> = new Map()
@@ -64,6 +66,59 @@ export default class Schema {
       }),
       {}
     )
+  }
+
+  static createSearchInputs(fields: ModelFields): GraphQLInputObjectType {
+    const _fields: any = {}
+
+    for (const [name, field] of Object.entries(fields)) {
+      const type = Schema.getGraphQLScalarType(field.type)
+      _fields[name] = new GraphQLInputObjectType({
+        name: 'innerWhere',
+        fields: () => {
+          return {
+            _eq: { type },
+          }
+        },
+      })
+    }
+
+    return new GraphQLInputObjectType({
+      name: 'where',
+      fields: () => _fields,
+    })
+  }
+
+  static createSearchDirectives(name: string, field: ModelField) {
+    const type = Schema.getGraphQLScalarType(field.type)
+    const SearchFieldType = new GraphQLInputObjectType({
+      name: `where_${name}_${field.name}`,
+      description: 'filter your results',
+      fields: () => searchFields,
+    })
+
+    let searchFields: any = {
+      _eq: { type },
+      _neq: { type },
+      _and: { type: GraphQLList(SearchFieldType) },
+      _or: { type: GraphQLList(SearchFieldType) },
+    }
+
+    if (field.type === 'int') {
+      searchFields = {
+        ...searchFields,
+        _in: { type: GraphQLList(type) },
+        _gt: { type },
+        _lt: { type },
+      }
+    }
+
+    if (field.type === 'string') {
+      searchFields = {
+        ...searchFields,
+        _reg: { type },
+      }
+    }
   }
 
   static getGraphQLScalarType(type: string): GraphQLScalarType {

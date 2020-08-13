@@ -97,7 +97,6 @@ export default class Model {
     this.name = schema.name
     this.table = schema.table
     this.graphQLType = this.initGraphQL()
-    // this.rootQuery = new RootQuery(schema)
 
     Cache.name.set(this.name, this)
   }
@@ -116,6 +115,7 @@ export default class Model {
       },
     })
   }
+
 
   createGraphQLField(field: ModelField): GraphQLField {
     const type = this.getGraphQLFieldType(field)
@@ -138,9 +138,9 @@ export default class Model {
     else if (joinType === 'manyToMany') {
       _field.resolve = (parent: Record, args: ResolveArgs) => {
         // @ts-ignore
-        return db[field.join.table].searchIn({
+        return db[field.join.table].searchIn(trace('searchIn')({
           [field.join.foreign]: parent[field.join.local],
-        })
+        }))
       }
     }
 
@@ -152,7 +152,9 @@ export default class Model {
           [field.join.foreign]: parent[field.join.local],
         })
       }
-    } else if (joinType === 'oneToOne') {
+    }
+
+    else if (joinType === 'oneToOne') {
       _field.resolve = (parent: Record, args: ResolveArgs) => {
         // @ts-ignore
         return db[field.join.table].find({
