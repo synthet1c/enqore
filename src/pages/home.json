@@ -2,6 +2,30 @@
   "name": "home",
   "template": "home.html",
   "slug": "/home",
+  "extends": {
+    "name": "page",
+    "merge": {
+      "meta": "overwrite",
+      "components": "mergeDeep"
+    }
+  },
+  "route": {
+    "url": "/shop/{productId}",
+    "get": {
+      "variant": "string"
+    },
+    "params": {
+      "id": "productId"
+    },
+    "where": {
+      "// conditionally apply the schema to the data": "",
+      "product.category": "radios",
+      "user.access": {
+        "_gte": "admin"
+      }
+    }
+  },
+  "data": "./home.graphql",
   "fields": {
     "theme": "dark"
   },

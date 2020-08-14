@@ -1,0 +1,59 @@
+{
+  "name": "books",
+  "url": "/books",
+  "routes": [
+    {
+      "url": "/",
+      "controller": "routes/index.route.json",
+      "params": {},
+      "get": {},
+      "post": {},
+      "pagination": true
+    },
+    {
+      "url": "/authors",
+      "controller": "routes/authors.route.json",
+      "params": {},
+      "get": {},
+      "post": {},
+      "pagination": true
+    },
+    {
+      "url": "/authors/{authorSlug:string}",
+      "controller": "routes/author.route.json",
+      "params": {
+        "slug": "authorSlug"
+      },
+      "get": {},
+      "post": {},
+      "pagination": false
+    },
+    {
+      "url": "/authors/{authorSlug:string}/books",
+      "controller": "routes/books.route.json",
+      "params": {
+        "author": "authorSlug"
+      },
+      "get": {},
+      "post": {},
+      "pagination": true
+    },
+    {
+      "url": "/books",
+      "controller": "routes/books.route.json",
+      "params": {},
+      "get": {},
+      "post": {},
+      "pagination": true
+    },
+    {
+      "url": "/books/{bookSlug:string}",
+      "controller": "routes/book.route.json",
+      "params": {
+        "slug": "bookSlug"
+      },
+      "getters": {},
+      "pagination": false
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "name": "page",
+  "description": "Standard page layout",
+  "template": "./page.vue",
+  "fields": [
+    {
+      "key": "theme",
+      "name": "Theme",
+      "type": "theme",
+      "searchable": false,
+      "required": false,
+      "default": "${theme.name}"
+    }
+  ],
+  "meta": {
+    "title": "${page.title}",
+    "description": "${page.description}"
+  },
+  "components": [
+    {
+      "name": "body",
+      "area": "body",
+      "components": [
+        {
+          "name": "header",
+          "components": [
+            {
+              "name": "menu",
+              "type": "widget",
+              "data": "modules/global/queries/menu.ts"
+            }
+          ]
+        },
+        {
+          "name": "content",
+          "type": "block",
+          "block": "content",
+          "fields": {
+            "container": "${fields.container}"
+          }
+        },
+        {
+          "name": "footer"
+        }
+      ]
+    }
+  ]
+}

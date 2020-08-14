@@ -1,0 +1,61 @@
+{
+  "name": "product",
+  "extends": {
+    "name": "page",
+    "merge": {
+      "meta": "overwrite",
+      "components": "mergeDeep"
+    }
+  },
+  "route": {
+    "url": "/shop/{productId}",
+    "get": {
+      "variant": "string"
+    },
+    "params": {
+      "id": "productId"
+    },
+    "where": {
+      "// conditionally apply the schema to the data": "",
+      "product.category": "radios",
+      "user.access": {
+        "$gte": "admin"
+      }
+    }
+  },
+  "template": "home.vue",
+  "fields": {
+    "theme": "dark"
+  },
+  "meta": {
+    "title": "Home",
+    "description": "the home page"
+  },
+  "data": "./product.graphql",
+  "components": [
+    {
+      "name": "section",
+      "components": [
+        {
+          "name": "details",
+          "type": "product",
+          "data": "$product"
+        }
+      ]
+    },
+    {
+      "name": "section",
+      "components": [
+        {
+          "name": "relatedProducts",
+          "type": "widget",
+          "data": "relatedProducts",
+          "args": {
+            "count": 3,
+            "id": "$id"
+          }
+        }
+      ]
+    }
+  ]
+}

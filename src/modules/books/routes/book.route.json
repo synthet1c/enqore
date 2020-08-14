@@ -1,0 +1,10 @@
+{
+  "name": "book",
+  "extends": "",
+  "template": "templates/book.vue",
+  "params": {},
+  "fields": {},
+  "meta": {},
+  "data": "./queries/book.query.graphql",
+  "components": []
+}

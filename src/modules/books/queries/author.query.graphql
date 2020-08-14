@@ -1,0 +1,8 @@
+query authors($id: Int) {
+  authors(where: {
+    id: { _gt: $id }
+  }) {
+    name,
+    id
+  }
+}

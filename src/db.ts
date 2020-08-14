@@ -171,6 +171,9 @@ const cond = (spec: Spec) => (obj: any): boolean => {
       if (directive === '_or') {
         // @ts-ignore
         conditions.push(R.anyPass(R.map(cond)(value))(obj))
+      } else if (directive === '_and') {
+        // @ts-ignore
+        conditions.push(R.allPass(R.map(cond)(value))(obj))
       } else {
         conditions.push(getCondition(directive)(value))
       }
