@@ -3,7 +3,7 @@
   "template": "home.html",
   "slug": "/home",
   "extends": {
-    "name": "page",
+    "file": "layouts/page.layout.json",
     "merge": {
       "meta": "overwrite",
       "components": "mergeDeep"

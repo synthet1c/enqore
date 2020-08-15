@@ -1,6 +1,8 @@
 {
   "name": "authors",
-  "extends": "layouts/page.layout.json",
+  "key": "authors",
+  "layout": "layouts/page.layout.json",
+  "extends": false,
   "template": "./author.vue",
   "params": {},
   "fields": {

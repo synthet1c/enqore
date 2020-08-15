@@ -1,4 +1,8 @@
 {
+  "name": "Heading",
+  "key": "heading",
+  "description": "",
+  "info": "",
   "type": "text",
   "input": "text"
 }

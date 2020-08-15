@@ -1,7 +1,7 @@
 {
-  "type": "string",
   "name": "Font size",
   "key": "fontSize",
+  "type": "string",
   "input": {
     "type": "select",
     "options": [

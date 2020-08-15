@@ -1,4 +1,8 @@
 {
+  "name": "Description",
+  "key": "description",
+  "description": "Html content component",
+  "info": "",
   "type": "text",
   "input": "wysiwyg"
 }

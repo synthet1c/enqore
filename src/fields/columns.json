@@ -1,20 +1,23 @@
 {
+  "name": "Columns",
+  "description": "Wrap your component in a column layout",
+  "extends": false,
+  "key": "columns",
   "type": "string",
   "input": "select",
   "required": false,
   "options": [
     {
-      "name":  "small",
-      "value": "small"
+      "name":  "1",
+      "value": "1"
     },
     {
-      "name":  "medium",
-      "value": "medium"
+      "name":  "3",
+      "value": "3"
     },
     {
-      "name":  "large",
-      "value": "large"
+      "name":  "6",
+      "value": "6"
     }
-  ],
-  "length": 120
+  ]
 }

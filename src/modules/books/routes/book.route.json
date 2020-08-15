@@ -1,6 +1,8 @@
 {
   "name": "book",
-  "extends": "",
+  "key": "book",
+  "layout": "layouts/page.layout.json",
+  "extends": false,
   "template": "templates/book.vue",
   "params": {},
   "fields": {},

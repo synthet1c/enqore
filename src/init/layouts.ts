@@ -1,7 +1,7 @@
-import Route from '../models/Route'
+import Layout from '../models/Layout'
 import modelInitializer from './modelInitilizer'
 
 export default modelInitializer({
-  files: ['**/*/*.route.json'],
-  ctor: Route,
+  files: ['**/*.layout.json'],
+  ctor: Layout,
 })

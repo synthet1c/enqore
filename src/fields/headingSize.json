@@ -1,6 +1,9 @@
 {
+  "name": "Heading size",
+  "key": "headingSize",
+  "description": "",
   "type": "string",
-  "input": "headingSize",
+  "input": "select",
   "options": [
     {
       "name":  "small",

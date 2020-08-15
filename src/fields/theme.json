@@ -1,6 +1,7 @@
 {
   "name": "Theme",
-  "type": "text",
+  "key": "theme",
+  "type": "string",
   "description": "Component theme",
   "input": {
     "type": "select",

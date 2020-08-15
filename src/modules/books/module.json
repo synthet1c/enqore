@@ -1,10 +1,11 @@
 {
   "name": "books",
-  "url": "/books",
+  "key": "books",
+  "url": "/library",
   "routes": [
     {
-      "url": "/",
-      "controller": "routes/index.route.json",
+      "url": "",
+      "controller": "modules/books/routes/index.route.json",
       "params": {},
       "get": {},
       "post": {},
@@ -12,7 +13,7 @@
     },
     {
       "url": "/authors",
-      "controller": "routes/authors.route.json",
+      "controller": "modules/books/routes/authors.route.json",
       "params": {},
       "get": {},
       "post": {},
@@ -20,7 +21,7 @@
     },
     {
       "url": "/authors/{authorSlug:string}",
-      "controller": "routes/author.route.json",
+      "controller": "modules/books/routes/author.route.json",
       "params": {
         "slug": "authorSlug"
       },
@@ -30,7 +31,7 @@
     },
     {
       "url": "/authors/{authorSlug:string}/books",
-      "controller": "routes/books.route.json",
+      "controller": "modules/books/routes/books.route.json",
       "params": {
         "author": "authorSlug"
       },
@@ -40,7 +41,7 @@
     },
     {
       "url": "/books",
-      "controller": "routes/books.route.json",
+      "controller": "modules/books/routes/books.route.json",
       "params": {},
       "get": {},
       "post": {},
@@ -48,7 +49,7 @@
     },
     {
       "url": "/books/{bookSlug:string}",
-      "controller": "routes/book.route.json",
+      "controller": "modules/books/routes/book.route.json",
       "params": {
         "slug": "bookSlug"
       },

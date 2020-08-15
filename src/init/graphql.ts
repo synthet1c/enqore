@@ -7,7 +7,7 @@ import {graphqlHTTP} from "express-graphql";
 
 export default async function initGraphql(app: Server): Promise<Server> {
 
-  console.log('schema', Schema.getRootQueryObject())
+  // console.log('schema', Schema.getRootQueryObject())
 
   const schema: any = new GraphQLSchema({
 

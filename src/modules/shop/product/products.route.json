@@ -1,5 +1,7 @@
 {
-  "name": "product",
+  "name": "products",
+  "key": "products",
+  "layout": "layouts/page.layout.json",
   "extends": {
     "name": "page",
     "merge": {

@@ -2,6 +2,7 @@
   "name": "page",
   "description": "Standard page layout",
   "template": "./page.vue",
+  "extends": false,
   "fields": [
     {
       "key": "theme",

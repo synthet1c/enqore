@@ -1,6 +1,8 @@
 {
   "name": "index",
-  "extends": "",
+  "key": "index",
+  "layout": "layouts/page.layout.json",
+  "extends": false,
   "template": "templates/index.vue",
   "params": {},
   "fields": {},
