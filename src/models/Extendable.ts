@@ -7,7 +7,7 @@ export default abstract class Extendable extends File {
 
   protected constructor(_config: ExtendableConfig) {
     super(_config)
-    this.__defaultConfig = _config
+    // this.__defaultConfig = _config
     this._config = _config
     if (typeof _config.extends === 'string') {
       this._config = this.extendConfig()
@@ -30,7 +30,6 @@ export default abstract class Extendable extends File {
     const extensions = [this.getConfig()]
     // @ts-ignore
     while ((extendable = extendable.getExtensionObject())) {
-      console.log('extendable', extendable, extensions)
       if (extendable) {
         extensions.unshift(extendable.getConfig())
       }

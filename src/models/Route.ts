@@ -1,16 +1,23 @@
 import Extendable, { ExtendableConfig } from './Extendable'
 import File from './File'
+import Layout from './Layout'
 
 export default class Route extends Extendable {
   protected static _cache: Map<string, Route> = new Map()
+  protected _config: RouteConfig
+  protected _layout: File
+  protected _layoutConfig: any
 
   constructor(_config: RouteConfig) {
     super(_config)
     Route._cache.set(_config.key, this)
+    this.initLayout()
   }
 
-  public static getLayout(name: string): Route | void {
-    return Route._cache.get(name)
+  public initLayout() {
+    this._layout = File.getByName(this._config.layout)
+    // @ts-ignore
+    this._layoutConfig = this._layout.convertBlocks(this._config.blocks)
   }
 
   public static getEntries(): IterableIterator<[string, Extendable]> {
@@ -37,4 +44,7 @@ export default class Route extends Extendable {
   }
 }
 
-interface RouteConfig extends ExtendableConfig {}
+interface RouteConfig extends ExtendableConfig {
+  layout: string,
+  blocks: any
+}

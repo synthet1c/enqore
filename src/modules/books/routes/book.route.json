@@ -8,5 +8,29 @@
   "fields": {},
   "meta": {},
   "data": "./queries/book.query.graphql",
-  "components": []
+  "components": [],
+  "blocks": {
+    "content": [
+      {
+        "name": "author__list",
+        "type": "list",
+        "fields": {
+          "heading": "${author.name}",
+          "headingSize": 2,
+          "description": "${author.description}",
+          "background": "${theme.primary}",
+          "fontSize": 2
+        }
+      },
+      {
+        "name": "relatedBooks",
+        "type": "books",
+        "data": "./queries/books.graphql",
+        "params": {
+          "author": "${author.id}",
+          "total": 3
+        }
+      }
+    ]
+  }
 }

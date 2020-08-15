@@ -3,16 +3,9 @@
   "description": "Standard page layout",
   "template": "./page.vue",
   "extends": false,
-  "fields": [
-    {
-      "key": "theme",
-      "name": "Theme",
-      "type": "theme",
-      "searchable": false,
-      "required": false,
-      "default": "${theme.name}"
-    }
-  ],
+  "fields": {
+    "theme": "light"
+  },
   "meta": {
     "title": "${page.title}",
     "description": "${page.description}"
@@ -33,12 +26,18 @@
           ]
         },
         {
-          "name": "content",
-          "type": "block",
-          "block": "content",
-          "fields": {
-            "container": "${fields.container}"
-          }
+          "name": "main",
+          "type": "main",
+          "components": [
+            {
+              "name": "content",
+              "type": "block",
+              "block": "content",
+              "fields": {
+                "container": "${fields.container}"
+              }
+            }
+          ]
         },
         {
           "name": "footer"

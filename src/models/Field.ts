@@ -13,7 +13,7 @@ export default class Field extends Extendable {
     return Field._cache.entries()
   }
 
-  public static getByName(name: string): Extendable {
+  public static getByName(name: string): Field {
     return Field._cache.get(name)
   }
 

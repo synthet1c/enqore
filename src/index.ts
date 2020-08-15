@@ -17,6 +17,10 @@ import {
 
 const app: Server = express()
 
+const tapAsync = (fn: (x: Server) => Promise<any>) => (
+  x: Server
+): Promise<Server> => fn(x).then(() => x)
+
 Promise.resolve(app)
   .then(initEnvironmentVariables)
   .then(initRequestParser)
@@ -28,8 +32,10 @@ Promise.resolve(app)
   .then(initGraphQL)
   .then(initRoutes)
   .then(initModules)
-  .then(x => {{
-    // console.log(File.entries())
-    return x
-  }})
+  .then(
+    tapAsync(async (x: Server) => {
+      // console.log(File.entries())
+      return await Promise.resolve(true)
+    })
+  )
   .then(initListener)

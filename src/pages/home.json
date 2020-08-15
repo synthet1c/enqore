@@ -33,57 +33,60 @@
     "title": "Home",
     "description": "the home page"
   },
-  "components": [
-    {
-      "name": "section",
-      "components": [
-        {
-          "name": "paragraph",
-          "fields": {
-            "heading": "Home",
-            "headingSize": "medium",
-            "description": "This is the home page",
-            "theme": "primary",
-            "fontSize": "small"
+  "blocks": {
+    "content": [
+      {
+        "name": "section",
+        "components": [
+          {
+            "name": "paragraph",
+            "fields": {
+              "heading": "Home",
+              "headingSize": "medium",
+              "description": "This is the home page",
+              "theme": "primary",
+              "fontSize": "small"
+            }
           }
-        }
-      ]
-    },
-    {
-      "name": "section",
-      "fields": {
-        "heading": "latest blogs",
-        "columns": 3
+        ]
       },
-      "components": [
-        {
-          "name": "card",
-          "fields": {
-            "heading": "Home",
-            "headingSize": "medium",
-            "description": "This is the home page",
-            "theme": "secondary",
-            "fontSize": "small",
-            "span": 1
-          }
+      {
+        "name": "section",
+        "fields": {
+          "heading": "latest blogs",
+          "columns": 3
         },
-        {
-          "name": "card",
-          "fields": {
-            "heading": "Home",
-            "headingSize": "medium",
-            "description": "This is the home page",
-            "image": {
-              "desktop": "/path/to/file/cart.desktop.jpg",
-              "tablet": "/path/to/file/cart.tablet.jpg",
-              "mobile": "/path/to/file/cart.mobile.jpg"
-            },
-            "theme": "secondary",
-            "fontSize": "small",
-            "span": 2
+        "components": [
+          {
+            "name": "card",
+            "fields": {
+              "heading": "Home",
+              "headingSize": "medium",
+              "description": "This is the home page",
+              "theme": "secondary",
+              "fontSize": "small",
+              "span": 1
+            }
+          },
+          {
+            "name": "card",
+            "fields": {
+              "heading": "Home",
+              "headingSize": "medium",
+              "description": "This is the home page",
+              "image": {
+                "desktop": "/path/to/file/cart.desktop.jpg",
+                "tablet": "/path/to/file/cart.tablet.jpg",
+                "mobile": "/path/to/file/cart.mobile.jpg"
+              },
+              "theme": "secondary",
+              "fontSize": "small",
+              "span": 2
+            }
           }
-        }
-      ]
-    }
-  ]
+        ]
+      }
+    ]
+  },
+  "components": []
 }
