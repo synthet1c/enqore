@@ -3,7 +3,9 @@
     "enqore.io",
     "onqore.io",
     "uniqor.digital",
-    "encore.ink"
+    "encore.ink",
+    "bloqs.digital",
+    "bloqks.io"
   ],
   "partials": [
     "ore",
@@ -28,6 +30,7 @@
     "shimmer",
     "flash",
     "spark",
-    "flare"
+    "flare",
+    "blocks"
   ]
 }

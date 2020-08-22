@@ -43,6 +43,7 @@ export interface Config {
   filename: string,
   key: string
   description?: string
+  data?: any
 }
 
 export interface ExtendableConfig extends Config {

@@ -1,0 +1,10 @@
+{
+  "name": "footer",
+  "key": "footer",
+  "type": "widget",
+  "description": "Menu container",
+  "container": true,
+  "template": "templates/components/footer.vue",
+  "data": "modules/global/footer-menu.ts",
+  "fields": {}
+}

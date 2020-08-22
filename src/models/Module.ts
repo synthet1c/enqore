@@ -1,5 +1,7 @@
 import Extendable, { ExtendableConfig } from './Extendable'
 import File from './File'
+import { Request, Response, Server } from 'express'
+import { trace } from '../utils'
 
 export default class Module extends Extendable {
   protected static _cache: Map<string, Module> = new Map()
@@ -22,6 +24,17 @@ export default class Module extends Extendable {
       expressUrl: this._config.url + route.url.replace(/\{([\w-_]+)[:\w+]+\}/i, ':$1'),
       controller: File.getByName(route.controller)
     }))
+  }
+
+  initExpressRoutes(app: Server) {
+    this._routes.forEach(route => {
+      app.use(route.expressUrl, (req: Request, res: Response) => {
+        res.json(trace('initExpressRoutes')({
+          route,
+          params: req.params,
+        }))
+      })
+    })
   }
 
   public static getEntries(): IterableIterator<[string, Extendable]> {

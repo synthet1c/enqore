@@ -15,6 +15,7 @@
       {
         "name": "author__list",
         "type": "list",
+        "key": "list",
         "fields": {
           "heading": "${author.name}",
           "headingSize": 2,
@@ -26,6 +27,7 @@
       {
         "name": "relatedBooks",
         "type": "books",
+        "key": "books",
         "data": "./queries/books.graphql",
         "params": {
           "author": "${author.id}",

@@ -1,0 +1,10 @@
+{
+  "name": "menu",
+  "key": "menu",
+  "type": "widget",
+  "description": "Menu container",
+  "container": true,
+  "template": "templates/components/menu.vue",
+  "data": "modules/global/menu.ts",
+  "fields": {}
+}

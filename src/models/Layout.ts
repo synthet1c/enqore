@@ -1,6 +1,9 @@
 import Field, { FieldConfig } from './Field'
 import { PageComponent } from './Page'
 import Extendable, { Config, ExtendableConfig } from './Extendable'
+import Component, { ComponentJSON } from './Component'
+import { trace } from '../utils'
+import { clone } from 'rambda'
 
 export default class Layout extends Extendable {
   protected static _cache: Map<string, Layout> = new Map()
@@ -24,55 +27,38 @@ export default class Layout extends Extendable {
   private initBlocks() {
     this._blocks = []
 
-    const traverse = (obj: {}, acc: {} = {}): {} => {
-      return Object.entries(obj).reduce((_acc: {}, [key, value]) => {
-        if (Array.isArray(value)) {
-          return value.map((x) => traverse(x, _acc))
+    Layout.mapComponents(
+      this._config.components,
+      (component: ComponentJSON) => {
+        if (component.type === 'block') {
+          this._blocks.push(component.name)
         }
-        // @ts-ignore
-        if (value.type === 'block') {
-          // @ts-ignore
-          _acc[value.name] = value
-        }
-        // @ts-ignore
-        if (value.components) {
-          // @ts-ignore
-          return traverse(value.components, _acc)
-        }
-        return _acc
-      }, acc)
-    }
-
-    this._blocks = traverse(this._config.components)
-
-    // this._convertedBlocks = this.convertBlocks()
+        return component
+      }
+    )
   }
 
   public convertBlocks(blocks: any) {
-    return Layout.traverseComponents(this._config.components, 'block', (x: {}) => {
-      console.log('blocks', blocks)
-      // @ts-ignore
-      if (typeof blocks !== 'undefined') {
-        // @ts-ignore
-        return blocks[x.name]
+    return Layout.mapComponents(
+      this._config.components,
+      (component: ComponentJSON) => {
+        if (component && component?.type === 'block') {
+          component.components = (trace('block')(blocks) && blocks[component.block]) || []
+        }
+        return component
       }
-      return x
-    })
+    )
   }
 
-  public static traverseComponents = (
+  public static mapComponents = (
     components: any[],
-    type: string,
-    fn: (x: any) => any
-  ): any[] => {
+    fn: (x: ComponentJSON) => ComponentJSON
+  ): ComponentJSON[] => {
     return components.map((component) => {
-      if (component.type === type) {
-        return fn(component)
-      }
       if (component.components) {
-        component.components = Layout.traverseComponents(component.components, type, fn)
+        component.components = Layout.mapComponents(component.components, fn)
       }
-      return component
+      return fn({ ...component })
     })
   }
 

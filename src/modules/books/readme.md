@@ -1,0 +1,8 @@
+- **module**: module information
+  - **controller**: routes for a module
+    - **route**: route handler with information about how to render the page and get the data
+      - **layout**: base layout
+        - **template**: template to render the layout
+        - **components**: tree of components
+          - **blocks**: areas to be filled with content from the route
+      - **blocks**: object of blocks from layout file, to be merged

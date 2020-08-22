@@ -20,8 +20,7 @@
           "components": [
             {
               "name": "menu",
-              "type": "widget",
-              "data": "modules/global/queries/menu.ts"
+              "type": "menu"
             }
           ]
         },

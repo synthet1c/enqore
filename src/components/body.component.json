@@ -1,0 +1,8 @@
+{
+  "name": "body",
+  "description": "Wrapping body element of your website",
+  "container": true,
+  "key": "body",
+  "template": "templates/components/body.vue",
+  "fields": {}
+}

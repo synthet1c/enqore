@@ -1,12 +1,17 @@
 import Extendable, { ExtendableConfig } from './Extendable'
 import File from './File'
 import Layout from './Layout'
+import Component, { ComponentJSON } from './Component'
+import { trace } from '../utils'
+import { Request, Response, Server } from 'express'
+import { clone } from 'rambda'
 
 export default class Route extends Extendable {
   protected static _cache: Map<string, Route> = new Map()
   protected _config: RouteConfig
   protected _layout: File
   protected _layoutConfig: any
+  private __preparedLayoutConfig: ComponentJSON[]
 
   constructor(_config: RouteConfig) {
     super(_config)
@@ -18,6 +23,19 @@ export default class Route extends Extendable {
     this._layout = File.getByName(this._config.layout)
     // @ts-ignore
     this._layoutConfig = this._layout.convertBlocks(this._config.blocks)
+
+    this.__preparedLayoutConfig = this.prepareComponents()
+    console.log('route', this)
+  }
+
+  public prepareComponents() {
+    return Layout.mapComponents(
+      this._layoutConfig,
+      (component: ComponentJSON): ComponentJSON => {
+        const _component = Component.prepareComponent(component)
+        return _component
+      }
+    )
   }
 
   public static getEntries(): IterableIterator<[string, Extendable]> {
@@ -45,6 +63,6 @@ export default class Route extends Extendable {
 }
 
 interface RouteConfig extends ExtendableConfig {
-  layout: string,
+  layout: string
   blocks: any
 }

@@ -2,6 +2,7 @@
   "name": "Paragraph",
   "container": false,
   "key": "paragraph",
+  "type": "paragraph",
   "template": "#components/paragraph.vue",
   "fields": [
     {

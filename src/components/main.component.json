@@ -1,0 +1,8 @@
+{
+  "name": "main",
+  "key": "main",
+  "description": "Main element",
+  "container": true,
+  "template": "templates/components/main.vue",
+  "fields": {}
+}
