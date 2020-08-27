@@ -1,7 +1,7 @@
 import { mergeAll } from 'rambda'
-import File from './File'
+import VirtualFile from './VirtualFile'
 
-export default abstract class Extendable extends File {
+export default abstract class Extendable extends VirtualFile {
   protected __defaultConfig: ExtendableConfig
   protected _config: ExtendableConfig
 
@@ -38,9 +38,9 @@ export default abstract class Extendable extends File {
   }
 }
 
-export interface Config {
+export interface Config extends JSON {
   name: string
-  filename: string,
+  filename: string
   key: string
   description?: string
   data?: any

@@ -124,6 +124,7 @@ const _conditions: any = {
   // _or: R.either(R.map(cond(value)(obj)),
   _neq: R.complement(R.equals),
   _in: R.includes,
+  _eq: (x: any) => (y: any): boolean => x === y,
   _lt: (x: number) => (y: number): boolean => y < x,
   _lte: (x: number) => (y: number): boolean => y <= x,
   _gt: (x: number) => (y: number): boolean => y > x,

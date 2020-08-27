@@ -5,86 +5,47 @@ import Component, { ComponentJSON } from './Component'
 import { trace } from '../utils'
 import { clone } from 'rambda'
 
-export default class Layout extends Extendable {
-  protected static _cache: Map<string, Layout> = new Map()
-  protected _fields: Field[]
-  private _blocks: any
-  private _convertedBlocks: any
+export default class Layout {
+  protected readonly _config: any
+  private _components: any[]
+  public components: any[]
+  public description: string
+  public fields: Field[]
+  public meta: any
+  public name: string
+  public template: string
 
-  constructor(protected readonly _config: LayoutConfig) {
-    super(_config)
-    Layout._cache.set(_config.key, this)
+  constructor(config: any) {
+    // this._config = _config
+    this.name = config.name
+    this.description = config.description
+    this.template = config.template
+    this.meta = config.meta
+    this.components = config.components
+    this.fields = config.fields
     this.initFields()
-    this.initBlocks()
   }
 
-  public initFields() {
-    this._fields = Object.entries(
-      this._config.fields
-    ).map(([key, value]: any) => Field.getByName(key))
+  private initFields() {
+    // this._config.fields.map((field: any) => new Field(field))
   }
 
-  private initBlocks() {
-    this._blocks = []
-
-    Layout.mapComponents(
-      this._config.components,
-      (component: ComponentJSON) => {
-        if (component.type === 'block') {
-          this._blocks.push(component.name)
-        }
+  public initBlocks(blocks: any) {
+    this.components = Layout.mapComponents(
+      this.components,
+      (component: any) => {
+        if (blocks[component.name])
+          component.components = clone(blocks[component.name])
         return component
       }
     )
   }
 
-  public convertBlocks(blocks: any) {
-    return Layout.mapComponents(
-      this._config.components,
-      (component: ComponentJSON) => {
-        if (component && component?.type === 'block') {
-          component.components = (trace('block')(blocks) && blocks[component.block]) || []
-        }
-        return component
-      }
-    )
-  }
-
-  public static mapComponents = (
-    components: any[],
-    fn: (x: ComponentJSON) => ComponentJSON
-  ): ComponentJSON[] => {
-    return components.map((component) => {
-      if (component.components) {
-        component.components = Layout.mapComponents(component.components, fn)
-      }
-      return fn({ ...component })
-    })
-  }
-
-  public replaceBlocks(blocks: any) {}
-
-  public static getLayout(name: string): Layout | void {
-    return Layout._cache.get(name)
-  }
-
-  public static getEntries(): IterableIterator<[string, Extendable]> {
-    return Layout._cache.entries()
-  }
-
-  public static getByName(name: string): Extendable {
-    return Layout._cache.get(name)
-  }
-
-  public getExtensionObject(): Layout | {} {
-    if (typeof this._config.extends === 'string') {
-      return Layout._cache.get(this._config.extends)
-    }
-    return {}
-  }
-
-  public static of(_config: LayoutConfig) {
-    return new Layout(_config)
+  static mapComponents(components: any[], fn = (x: any) => x): any[] {
+    return (components || []).map((component: any) => ({
+      ...fn(component),
+      components: Layout.mapComponents(component.components, fn),
+    }))
   }
 }
 

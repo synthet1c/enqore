@@ -25,6 +25,16 @@
       "filterable": true,
       "required": true
     },
+    "slug": {
+      "field": "text",
+      "name": "slug",
+      "description": "Author slug",
+      "type": "string",
+      "searchable": true,
+      "findable": true,
+      "filterable": true,
+      "required": true
+    },
     "books": {
       "field": "relation",
       "name": "books",

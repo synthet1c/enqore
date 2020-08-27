@@ -1,0 +1,37 @@
+{
+  "name": "author",
+  "key": "author",
+  "layout": "layouts/page.layout.json",
+  "extends": false,
+  "template": "./author.vue",
+  "params": {},
+  "fields": {
+    "theme": "dark"
+  },
+  "meta": {},
+  "data": "../queries/author.query.graphql",
+  "blocks": {
+    "content": [
+      {
+        "name": "author__details",
+        "type": "paragraph",
+        "fields": {
+          "heading": "${author.name}",
+          "headingSize": 2,
+          "description": "${author.description}",
+          "background": "${theme.primary}",
+          "fontSize": 2
+        }
+      },
+      {
+        "name": "relatedBooks",
+        "type": "books",
+        "data": "./queries/books.graphql",
+        "params": {
+          "author": "${author.id}",
+          "total": 3
+        }
+      }
+    ]
+  }
+}

@@ -3,10 +3,22 @@ import Extendable, { ExtendableConfig } from './Extendable'
 
 export default class Field extends Extendable {
   protected static _cache: Map<string, Field> = new Map()
+  public default: string
+  public description?: string
+  public input: InputType
+  public key: string
+  public name: string
+  public type: 'string' | 'integer'
 
-  constructor(_config: FieldConfig) {
-    super(_config)
-    Field._cache.set(_config.key, this)
+  constructor(config: FieldConfig) {
+    super(config)
+    this.default = config.default
+    this.description = config.description
+    this.input = config.input
+    this.key = config.key
+    this.name = config.name
+    this.type = config.type
+    Field._cache.set(config.key, this)
   }
 
   public static getEntries(): IterableIterator<[string, Extendable]> {
@@ -26,6 +38,15 @@ export default class Field extends Extendable {
   public static of(_config: FieldConfig) {
     return new Field(_config)
   }
+
+  public static evaluate(fields: any) {
+    const acc: any = {}
+    for (const [key, value] of Object.entries(fields)) {
+      const field = Field.getByName(key)
+      acc[key] = value || field.default
+    }
+    return acc
+  }
 }
 
 export interface FieldConfig extends ExtendableConfig {
@@ -34,6 +55,7 @@ export interface FieldConfig extends ExtendableConfig {
   key: string
   input: InputType
   description?: string
+  default?: string
 }
 
 export type InputType =

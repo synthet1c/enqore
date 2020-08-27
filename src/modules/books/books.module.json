@@ -1,0 +1,82 @@
+{
+  "name": "books",
+  "key": "books",
+  "url": "/library",
+  "routes": [
+    {
+      "url": "",
+      "controller": "modules/books/routes/index.route.json",
+      "params": {},
+      "get": {},
+      "post": {},
+      "pagination": true
+    },
+    {
+      "url": "/authors",
+      "controller": "modules/books/routes/author.list.route.json",
+      "params": {},
+      "get": {},
+      "post": {},
+      "pagination": true
+    },
+    {
+      "url": "/authors/{authorSlug:string}",
+      "method": "get",
+      "controller": "modules/books/routes/author.view.route.json",
+      "params": {
+        "authorSlug": "slug"
+      },
+      "query": {
+        "test": "test"
+      },
+      "input": {},
+      "pagination": false
+    },
+    {
+      "url": "/authors/new",
+      "controller": "modules/books/routes/author.new.route.json",
+      "params": {},
+      "query": {},
+      "input": {},
+      "pagination": false
+    },
+    {
+      "url": "/authors/create",
+      "method": "post",
+      "controller": "modules/books/routes/author.create.route.json",
+      "params": {},
+      "query": {},
+      "input": {
+        "name": "name"
+      },
+      "pagination": false
+    },
+    {
+      "url": "/authors/{authorSlug:string}/books",
+      "controller": "modules/books/routes/books.route.json",
+      "params": {
+        "authorSlug": "slug"
+      },
+      "get": {},
+      "post": {},
+      "pagination": true
+    },
+    {
+      "url": "/books",
+      "controller": "modules/books/routes/books.route.json",
+      "params": {},
+      "get": {},
+      "post": {},
+      "pagination": true
+    },
+    {
+      "url": "/books/{bookSlug:string}",
+      "controller": "modules/books/routes/book.route.json",
+      "params": {
+        "slug": "bookSlug"
+      },
+      "getters": {},
+      "pagination": false
+    }
+  ]
+}

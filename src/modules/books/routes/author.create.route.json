@@ -1,6 +1,6 @@
 {
-  "name": "authors",
-  "key": "authors",
+  "name": "author",
+  "key": "author",
   "layout": "layouts/page.layout.json",
   "extends": false,
   "template": "./author.vue",
@@ -9,13 +9,12 @@
     "theme": "dark"
   },
   "meta": {},
-  "data": "./queries/authors.query.graphql",
+  "data": "../queries/author.query.graphql",
   "blocks": {
     "content": [
       {
-        "name": "author__list",
-        "type": "list",
-        "key": "list",
+        "name": "author__details",
+        "type": "paragraph",
         "fields": {
           "heading": "${author.name}",
           "headingSize": 2,
@@ -27,7 +26,6 @@
       {
         "name": "relatedBooks",
         "type": "books",
-        "key": "books",
         "data": "./queries/books.graphql",
         "params": {
           "author": "${author.id}",

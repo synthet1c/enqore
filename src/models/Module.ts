@@ -1,67 +1,49 @@
-import Extendable, { ExtendableConfig } from './Extendable'
-import File from './File'
+import Extendable, { ExtendableConfig, Config } from './Extendable'
 import { Request, Response, Server } from 'express'
 import { trace } from '../utils'
+import Route, { RouteConfig } from './Route'
+import { GraphQLSchema } from 'graphql'
+import Base from './Base'
+import File from './File'
 
-export default class Module extends Extendable {
-  protected static _cache: Map<string, Module> = new Map()
-  protected _routes: any[] = []
-  protected _config: ModuleConfig
+export default class Module extends File {
   ['constructor'] = Module
 
-  constructor(_config: ModuleConfig) {
-    super(_config)
-    this.initRoutes()
+  protected static _cache: Map<string, Module> = new Map()
+  protected routes: any[] = []
+  protected _config: ModuleConfig
+  public url: string
+  public name: string
+  public key: string;
+
+  constructor(config: ModuleConfig) {
+    super(config)
+    // this._config = config
+    this.name = config.name
+    this.url = config.url
+    this.key = config.key
+    this.routes = config.routes.map(
+      (config: RouteConfig) => new Route(config, this)
+    )
+  }
+
+  init(app: Server, schema: GraphQLSchema) {
+    this.routes.forEach((route: Route) => route.init(app, this, schema))
   }
 
   getRoutes() {
-    return this._routes
+    return this.routes
   }
 
-  initRoutes() {
-    this._routes = this._config.routes.reverse().map((route: any) => ({
-      ...route,
-      expressUrl: this._config.url + route.url.replace(/\{([\w-_]+)[:\w+]+\}/i, ':$1'),
-      controller: File.getByName(route.controller)
-    }))
-  }
-
-  initExpressRoutes(app: Server) {
-    this._routes.forEach(route => {
-      app.use(route.expressUrl, (req: Request, res: Response) => {
-        res.json(trace('initExpressRoutes')({
-          route,
-          params: req.params,
-        }))
-      })
-    })
-  }
-
-  public static getEntries(): IterableIterator<[string, Extendable]> {
-    return Module._cache.entries()
-  }
-
-  public static getByName(name: string): Extendable {
+  static getByName(name: string) {
     return Module._cache.get(name)
-  }
-
-  public getExtensionObject(): Module | {} {
-    if (typeof this._config.extends === 'string') {
-      const _file = File.getByName(this._config.extends)
-      if (_file) {
-        return _file
-      }
-      return Module._cache.get(this._config.extends)
-    }
-    return {}
-  }
-
-  static of(_config: ModuleConfig): Module {
-    return new Module(_config)
   }
 }
 
-export interface ModuleConfig extends ExtendableConfig {
+export interface ModuleConfig {
+  key: string
+  name: string
   routes: any[]
   url: string
+  file: string
 }

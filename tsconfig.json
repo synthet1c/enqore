@@ -9,6 +9,7 @@
     "inlineSourceMap": true,
     "outDir": "dist",
     "baseUrl": ".",
+    "types": ["node"],
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "paths": {

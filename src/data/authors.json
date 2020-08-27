@@ -1,46 +1,57 @@
 [
   {
     "id": 1,
-    "name": "Marijn Haverbeke"
+    "name": "Marijn Haverbeke",
+    "slug": "marijn-haverbeke"
   },
   {
     "id": 2,
-    "name": "Addy Osmani"
+    "name": "Addy Osmani",
+    "slug": "addy-osmani"
   },
   {
     "id": 3,
-    "name": "Axel Rauschmayer"
+    "name": "Axel Rauschmayer",
+    "slug": "axel-rauschmayer"
   },
   {
     "id": 4,
-    "name": "Eric Elliott"
+    "name": "Eric Elliott",
+    "slug": "eric-elliott"
   },
   {
     "id": 5,
-    "name": "Nicholas C. Zakas"
+    "name": "Nicholas C. Zakas",
+    "slug": "nicholas-c-zakas"
   },
   {
     "id": 6,
-    "name": "Kyle Simpson"
+    "name": "Kyle Simpson",
+    "slug": "kyle-simpson"
   },
   {
     "id": 7,
-    "name": "Richard E. Silverman"
+    "name": "Richard E. Silverman",
+    "slug": "richard-e-silverman"
   },
   {
     "id": 8,
-    "name": "Glenn Block, et al."
+    "name": "Glenn Block, et al.",
+    "slug": "glenn-block"
   },
   {
     "id": 9,
-    "name": "fnt"
+    "name": "fnt",
+    "slug": "fnt"
   },
   {
     "id": 10,
-    "name": "foontal"
+    "name": "foonta",
+    "slug": "foonta"
   },
   {
     "id": 11,
-    "name": "test"
+    "name": "test",
+    "slug": "test"
   }
 ]

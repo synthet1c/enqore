@@ -7,7 +7,7 @@
   "params": {},
   "fields": {},
   "meta": {},
-  "data": "./queries/books.query.graphql",
+  "data": "../queries/books.query.graphql",
   "components": [],
   "blocks": {
     "content": [

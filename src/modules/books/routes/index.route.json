@@ -7,7 +7,7 @@
   "params": {},
   "fields": {},
   "meta": {},
-  "data": "./queries/index.query.graphql",
+  "data": "../queries/index.query.graphql",
   "components": [],
   "blocks": {
     "content": [

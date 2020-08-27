@@ -1,8 +1,11 @@
-query authors($id: Int) {
-  authors(where: {
-    id: { _gt: $id }
-  }) {
+query author($slug: String) {
+  author(slug: $slug) {
     name,
-    id
+    slug,
+    id,
+    books {
+      title,
+      id,
+    }
   }
 }

@@ -1,2 +1,4 @@
-export { trace } from './trace'
-export { glob } from './glob'
+export * from './trace'
+export * from './glob'
+export * from './tapAsync'
+export * from './evalObject'

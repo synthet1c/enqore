@@ -3,11 +3,19 @@ import path from 'path'
 import { readJSON } from '../db'
 import globby from 'globby'
 import Extendable, { ExtendableConfig, Config } from '../models/Extendable'
+import { GraphQLSchema } from 'graphql'
+import Module from '../models/Module'
 
-export default function modelInitializer(
-  initializerConfig: InitializerConfig
-) {
-  return async function (app: Server): Promise<Server> {
+export interface AppInitializer {
+  app: Server
+  schema?: GraphQLSchema,
+  modules?: Module[]
+}
+
+export default function modelInitializer(initializerConfig: InitializerConfig) {
+  return async function ({
+    app,
+  }: AppInitializer) {
     const files: string[] = await globby(initializerConfig.files, {
       cwd: path.join(process.cwd(), './src'),
     })
@@ -27,11 +35,9 @@ export default function modelInitializer(
       await initializerConfig.after(app, {
         files,
         models,
-        instances
+        instances,
       })
     }
-
-    return app
   }
 }
 
@@ -48,10 +54,9 @@ export interface AfterArgs {
 }
 
 export interface FileConfig {
-  filename: string,
+  filename: string
   file: Config
 }
-
 
 export interface IInitializer {
   of(_config: ExtendableConfig): Extendable

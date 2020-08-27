@@ -1,16 +1,23 @@
-import {GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLSchema, GraphQLString} from "graphql";
-import Model from "../models/Model";
-import Schema from "../models/Schema";
-import {Author, Book, db} from "../db";
-import {Server} from "express";
-import {graphqlHTTP} from "express-graphql";
+import {
+  GraphQLInt,
+  GraphQLList,
+  GraphQLObjectType,
+  GraphQLSchema,
+  GraphQLString,
+} from 'graphql'
+import Model from '../models/Model'
+import Schema from '../models/Schema'
+import { Author, Book, db } from '../db'
+import { Server } from 'express'
+import { graphqlHTTP } from 'express-graphql'
+import { AppInitializer } from './modelInitilizer'
 
-export default async function initGraphql(app: Server): Promise<Server> {
-
+export default async function initGraphql({
+  app,
+}: AppInitializer): Promise<AppInitializer> {
   // console.log('schema', Schema.getRootQueryObject())
 
   const schema: any = new GraphQLSchema({
-
     query: new GraphQLObjectType({
       name: 'RootQueryType',
       description: 'Root query',
@@ -20,7 +27,7 @@ export default async function initGraphql(app: Server): Promise<Server> {
           description: 'Sup brah!',
           resolve(_: any) {
             return 'world'
-          }
+          },
         },
         ...Schema.getRootQueryObject(),
         /*
@@ -63,24 +70,26 @@ export default async function initGraphql(app: Server): Promise<Server> {
           }
         },
         */
-      })
-    })
+      }),
+    }),
   })
 
   // @ts-ignore
-  app.use('/graphql',
+  app.use(
+    '/graphql',
     graphqlHTTP({
       schema,
-      graphiql: true
+      graphiql: true,
     })
   )
 
   // @ts-ignore
-  app.use('/api',
+  app.use(
+    '/api',
     graphqlHTTP({
       schema,
     })
   )
 
-  return app
+  return { app, schema }
 }

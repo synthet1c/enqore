@@ -5,7 +5,8 @@
     "uniqor.digital",
     "encore.ink",
     "bloqs.digital",
-    "bloqks.io"
+    "bloqks.io",
+    "enjun.io"
   ],
   "partials": [
     "ore",
@@ -31,6 +32,8 @@
     "flash",
     "spark",
     "flare",
-    "blocks"
+    "blocks",
+    "engine",
+    "genie"
   ]
 }

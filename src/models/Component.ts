@@ -1,5 +1,5 @@
 import Extendable, { ExtendableConfig } from './Extendable'
-import File from './File'
+import VirtualFile from './VirtualFile'
 import Field from './Field'
 import path from 'path'
 
@@ -25,7 +25,7 @@ export default class Component extends Extendable {
 
   public getExtensionObject(): Component | {} {
     if (typeof this._config.extends === 'string') {
-      const _file = File.getByName(this._config.extends)
+      const _file = VirtualFile.getByName(this._config.extends)
       if (_file) {
         return _file
       }
