@@ -16,6 +16,7 @@ import { AppInitializer } from './init/modelInitilizer'
 
 const app: Server = express()
 
+/*
 console.log(
   'log',
   evalObject({
@@ -25,6 +26,7 @@ console.log(
     num: 42,
   })
 )
+*/
 
 // async function one({ foo }: any) {
 //   console.log('one', foo)

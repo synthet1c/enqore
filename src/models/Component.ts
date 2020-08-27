@@ -57,6 +57,19 @@ export default class Component extends Extendable {
       }),
     }
   }
+
+  public static mapComponents(fn: (x: any) => any, components: any[]) {
+    return components.map((component) => {
+      const _component = fn(component)
+      if (_component.components) {
+        _component.components = Component.mapComponents(
+          fn,
+          _component.components
+        )
+      }
+      return _component
+    })
+  }
 }
 
 export interface ComponentConfig extends ExtendableConfig {}

@@ -8,7 +8,9 @@
   "fields": {
     "theme": "dark"
   },
-  "meta": {},
+  "meta": {
+    "calc": "${2 + 2}"
+  },
   "data": "../queries/authors.query.graphql",
   "blocks": {
     "content": [
@@ -17,9 +19,9 @@
         "type": "list",
         "key": "list",
         "fields": {
-          "heading": "${author.name}",
+          "heading": "${page.title}",
           "headingSize": 2,
-          "description": "${author.description}",
+          "description": "This is the description (${page.description}) bitches",
           "background": "${theme.primary}",
           "fontSize": 2
         }

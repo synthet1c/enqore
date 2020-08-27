@@ -8,7 +8,9 @@
   "fields": {
     "theme": "dark"
   },
-  "meta": {},
+  "meta": {
+
+  },
   "data": "../queries/author.query.graphql",
   "blocks": {
     "content": [

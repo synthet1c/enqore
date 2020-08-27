@@ -8,7 +8,10 @@
   },
   "meta": {
     "title": "${page.title}",
-    "description": "${page.description}"
+    "description": "${page.description}",
+    "test": "this is a test",
+    "number": "${page.number}",
+    "calc": "${2 + 2}"
   },
   "components": [
     {

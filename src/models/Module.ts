@@ -10,11 +10,11 @@ export default class Module extends File {
   ['constructor'] = Module
 
   protected static _cache: Map<string, Module> = new Map()
-  protected routes: any[] = []
+  public routes: any[] = []
   protected _config: ModuleConfig
   public url: string
   public name: string
-  public key: string;
+  public key: string
 
   constructor(config: ModuleConfig) {
     super(config)
@@ -22,6 +22,7 @@ export default class Module extends File {
     this.name = config.name
     this.url = config.url
     this.key = config.key
+    Module._cache.set(config.key, this)
     this.routes = config.routes.map(
       (config: RouteConfig) => new Route(config, this)
     )
@@ -39,6 +40,10 @@ export default class Module extends File {
 
   static getByName(name: string) {
     return Module._cache.get(name)
+  }
+
+  static entries() {
+    return Module._cache.entries()
   }
 }
 

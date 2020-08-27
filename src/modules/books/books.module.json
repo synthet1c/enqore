@@ -7,7 +7,9 @@
       "url": "",
       "controller": "modules/books/routes/index.route.json",
       "params": {},
-      "get": {},
+      "get": {
+        "test": 1
+      },
       "post": {},
       "pagination": true
     },

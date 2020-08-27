@@ -14,4 +14,5 @@ __exportStar(require("./trace"), exports);
 __exportStar(require("./glob"), exports);
 __exportStar(require("./tapAsync"), exports);
 __exportStar(require("./evalObject"), exports);
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW5kZXguanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi9zcmMvdXRpbHMvaW5kZXgudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7O0FBQUEsMENBQXVCO0FBQ3ZCLHlDQUFzQjtBQUN0Qiw2Q0FBMEI7QUFDMUIsK0NBQTRCIn0=
+__exportStar(require("./convertProps"), exports);
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW5kZXguanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi9zcmMvdXRpbHMvaW5kZXgudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7O0FBQUEsMENBQXVCO0FBQ3ZCLHlDQUFzQjtBQUN0Qiw2Q0FBMEI7QUFDMUIsK0NBQTRCO0FBQzVCLGlEQUE4QiJ9

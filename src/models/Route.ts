@@ -3,13 +3,14 @@ import Controller from './Controller'
 import Module from './Module'
 import { Server, Request, Response } from 'express'
 import Field from './Field'
-import { evalObject, trace } from '../utils'
+import { evalObject, trace, convertProps } from '../utils'
 import { GraphQLSchema, graphql } from 'graphql'
 import { promises as fs } from 'fs'
 import { dirname } from 'path'
 import { File } from '../utils/readFile'
 import Base, { BaseConfig } from './Base'
-import { omit } from 'rambda'
+import { omit, tap } from 'rambda'
+import Component from './Component'
 
 const omitPrivates = omit(['_cache', '_schema'])
 
@@ -27,6 +28,7 @@ export default class Route extends Base {
   public path: string
   public post: object
   public url: string
+  public origUrl: string
   private query: string
   public file: any
 
@@ -35,6 +37,7 @@ export default class Route extends Base {
     // this._config = config
     this.parent = parent
     this.file = parent.file
+    this.origUrl = config.url
     this.url = Route.convertUrl(config.url)
     this.params = config.params
     this.get = config.get
@@ -55,51 +58,70 @@ export default class Route extends Base {
   private onRoute = (req: Request, res: Response) => {
     console.log('Route::onRoute', this)
 
-    const convertProps = (converter: any) => (props: any) => {
-      return Object.entries(converter).reduce(
-        (acc: any, [key, value]: [string, string]) => {
-          if (acc[key]) {
-            return omit([key], {
-              ...acc,
-              [value]: acc[key],
-            })
-          }
-          return acc
-        },
-        props
-      )
+    const data = {
+      page: {
+        title: 'This is the title',
+        description: 'this is the description',
+        number: 1337,
+      },
+      theme: {
+        primary: '#3cf',
+      },
     }
 
-    if (this.controller.query) {
-      graphql(
-        trace('graphQlQuery')({
-          schema: this.schema,
-          source: this.controller.query,
-          variableValues: convertProps(this.params)(req.params),
-          // variableValues: {
-          //   id: 7,
-          // },
+    return Promise.resolve(data)
+      .then((data: any) => {
+        if (!this.controller.query) return data
+
+        return graphql(
+          trace('graphQlQuery')({
+            schema: this.schema,
+            source: this.controller.query,
+            variableValues: convertProps(this.params)(req.params),
+          })
+        )
+          .then((response) => ({
+            ...data,
+            ...response.data,
+          }))
+          .catch(trace('error'))
+      })
+      .then(
+        tap((data: any) => {
+          console.log('response', data)
+          this.data = data
+          res.json(this.createResponse(data, req))
         })
       )
-        .then((response) => {
-          console.log('response', response)
-          this.data = response.data
-          res.json({
-            params: req.params,
-            // blocks: this.controller.blocks,
-            layout: this.controller.layout,
-            fields: this.controller.fields,
-            data: response.data,
-          })
-        })
-        .catch(trace('error'))
-    } else {
-      res.json({
-        params: req.params,
-        // blocks: this.controller.blocks,
-        layout: this.controller.layout,
-        fields: this.controller.fields,
-      })
+  }
+
+  private createResponse(data: any, req: Request) {
+
+    console.log('createResponse', data)
+    const modules = Array.from(Module.entries()).map(([key, module]) => {
+      return {
+        url: module.url,
+        routes: module.routes.map((route: any) => route.url)
+      }
+    })
+
+    return {
+      params: req.params,
+      blocks: Object.keys(this.controller.blocks),
+      modules,
+      // layout: this.controller.layout,
+      fields: this.controller.fields,
+      components: Component.mapComponents((component) => {
+        if (component.fields) {
+          component.fields = evalObject(component.fields)(data)
+        }
+        if (component.params) {
+          component.params = evalObject(component.params)(data)
+        }
+        return component
+      }, this.controller.layout.components),
+      meta: evalObject(this.controller.layout.meta)(data),
+      data,
     }
   }
 
