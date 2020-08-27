@@ -4,8 +4,10 @@ import Extendable, { Config, ExtendableConfig } from './Extendable'
 import Component, { ComponentJSON } from './Component'
 import { trace } from '../utils'
 import { clone } from 'rambda'
+import Base from './Base'
 
-export default class Layout {
+export default class Layout extends Base {
+  ['constructor'] = Layout
   protected readonly _config: any
   private _components: any[]
   public components: any[]
@@ -16,6 +18,7 @@ export default class Layout {
   public template: string
 
   constructor(config: any) {
+    super(config)
     // this._config = _config
     this.name = config.name
     this.description = config.description
@@ -24,6 +27,10 @@ export default class Layout {
     this.components = config.components
     this.fields = config.fields
     this.initFields()
+  }
+
+  public async init(parent: Base) {
+    this.parent = parent
   }
 
   private initFields() {

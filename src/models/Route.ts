@@ -14,6 +14,8 @@ import { omit } from 'rambda'
 const omitPrivates = omit(['_cache', '_schema'])
 
 export default class Route extends Base {
+  ['constructor'] = Route
+
   protected _config: RouteConfig
   protected controller: any
   protected _schema: GraphQLSchema
@@ -25,10 +27,8 @@ export default class Route extends Base {
   public path: string
   public post: object
   public url: string
-  private query: string;
+  private query: string
   public file: any
-
-  ['constructor'] = Route
 
   constructor(config: RouteConfig, parent: any) {
     super(config)
@@ -56,26 +56,31 @@ export default class Route extends Base {
     console.log('Route::onRoute', this)
 
     const convertProps = (converter: any) => (props: any) => {
-      return Object.entries(converter).reduce((acc: any, [key, value]: [string, string]) => {
-        if (acc[key]) {
-          return omit([key], {
-            ...acc,
-            [value]: acc[key]
-          })
-        }
-        return acc
-      }, props)
+      return Object.entries(converter).reduce(
+        (acc: any, [key, value]: [string, string]) => {
+          if (acc[key]) {
+            return omit([key], {
+              ...acc,
+              [value]: acc[key],
+            })
+          }
+          return acc
+        },
+        props
+      )
     }
 
     if (this.controller.query) {
-      graphql(trace('graphQlQuery')({
-        schema: this.schema,
-        source: this.controller.query,
-        variableValues: convertProps(this.params)(req.params),
-        // variableValues: {
-        //   id: 7,
-        // },
-      }))
+      graphql(
+        trace('graphQlQuery')({
+          schema: this.schema,
+          source: this.controller.query,
+          variableValues: convertProps(this.params)(req.params),
+          // variableValues: {
+          //   id: 7,
+          // },
+        })
+      )
         .then((response) => {
           console.log('response', response)
           this.data = response.data
@@ -84,12 +89,11 @@ export default class Route extends Base {
             // blocks: this.controller.blocks,
             layout: this.controller.layout,
             fields: this.controller.fields,
-            data: response.data
+            data: response.data,
           })
         })
         .catch(trace('error'))
-    }
-    else {
+    } else {
       res.json({
         params: req.params,
         // blocks: this.controller.blocks,
@@ -97,12 +101,15 @@ export default class Route extends Base {
         fields: this.controller.fields,
       })
     }
-
   }
 
-  public init(app: Server, module: Module, schema: GraphQLSchema) {
+  public async init(app: Server, parent: Module, schema: GraphQLSchema) {
     this._schema = schema
-    app.get(module.url + this.url, this.onRoute)
+    this.parent = parent
+    return this.controller.init(this).then((x: any) => {
+      app.get(parent.url + this.url, this.onRoute)
+      return x
+    })
   }
 
   static convertUrl(url: string) {

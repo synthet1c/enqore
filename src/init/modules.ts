@@ -5,6 +5,7 @@ import globby from 'globby'
 import path from 'path'
 import readFile from '../utils/readFile'
 import { GraphQLSchema } from 'graphql'
+import { tap } from 'rambda'
 // import { readJSON } from '../db'
 
 export default async function initializeModules({
@@ -15,19 +16,20 @@ export default async function initializeModules({
     cwd: path.join(process.cwd(), './src'),
   })
 
-  console.log('files', files)
-
   const modules = await Promise.all(files.map(readFile))
 
   const _modules = modules.map((module: any) => new Module(module))
 
-  _modules.forEach((module) => module.init(app, schema))
+  // initialize all the modules
+  return Promise.all(_modules.map((module) => module.init(app, schema)))
+    .then(tap((responses: any) => {
+      console.log(_modules)
+    }))
+    .then((x: any) => ({
+      app,
+      schema,
+      modules: _modules,
+    }))
 
-  console.log(_modules)
 
-  return {
-    app,
-    schema,
-    modules: _modules,
-  }
 }

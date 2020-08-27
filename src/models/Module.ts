@@ -27,8 +27,10 @@ export default class Module extends File {
     )
   }
 
-  init(app: Server, schema: GraphQLSchema) {
-    this.routes.forEach((route: Route) => route.init(app, this, schema))
+  public async init(app: Server, schema: GraphQLSchema) {
+    return Promise.all(
+      this.routes.map((route: Route) => route.init(app, this, schema))
+    )
   }
 
   getRoutes() {

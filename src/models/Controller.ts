@@ -37,6 +37,11 @@ export default class Controller extends File {
     this.initLayout()
   }
 
+  public async init(parent: Base) {
+    this.parent = parent
+    return this.layout.init(this)
+  }
+
   private getQuery() {
     if (this.queryFile) {
       this.readTextFile(this.queryFile)
