@@ -10,6 +10,7 @@ import { tap } from 'rambda'
 
 export default async function initializeModules({
   app,
+  Db,
   schema,
 }: AppInitializer): Promise<AppInitializer> {
   const files: string[] = await globby('**/*/*.module.json', {
@@ -21,7 +22,7 @@ export default async function initializeModules({
   const _modules = modules.map((module: any) => new Module(module))
 
   // initialize all the modules
-  return Promise.all(_modules.map((module) => module.init(app, schema)))
+  return Promise.all(_modules.map((module) => module.init(app, schema, Db)))
     .then(tap((responses: any) => {
       console.log(_modules)
     }))

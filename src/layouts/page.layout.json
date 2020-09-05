@@ -11,6 +11,7 @@
     "description": "${page.description}",
     "test": "this is a test",
     "number": "${page.number}",
+    "name": "Written by ${user.firstName} ${user.lastName}",
     "calc": "${2 + 2}"
   },
   "components": [

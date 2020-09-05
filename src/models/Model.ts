@@ -107,7 +107,7 @@ export default class Model {
       fields: () => {
         const _fields: { [key: string]: any } = {}
         const entries = Object.entries(this.schema.fields)
-        for (let [key, value] of entries) {
+        for (const [key, value] of entries) {
           // @ts-ignore
           _fields[key] = this.createGraphQLField(value)
         }
@@ -165,7 +165,7 @@ export default class Model {
 
     if (field.args) {
       _field.args = {}
-      for (let [key, value] of Object.entries(field.args)) {
+      for (const [key, value] of Object.entries(field.args)) {
         _field.args[key] = {
           // @ts-ignore
           type: this.getGraphQLType(value),

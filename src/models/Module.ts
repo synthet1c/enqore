@@ -5,6 +5,7 @@ import Route, { RouteConfig } from './Route'
 import { GraphQLSchema } from 'graphql'
 import Base from './Base'
 import File from './File'
+import { Db } from 'mongodb'
 
 export default class Module extends File {
   ['constructor'] = Module
@@ -28,9 +29,9 @@ export default class Module extends File {
     )
   }
 
-  public async init(app: Server, schema: GraphQLSchema) {
+  public async init(app: Server, schema: GraphQLSchema, Db: Db) {
     return Promise.all(
-      this.routes.map((route: Route) => route.init(app, this, schema))
+      this.routes.map((route: Route) => route.init(app, this, schema, Db))
     )
   }
 

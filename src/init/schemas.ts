@@ -6,7 +6,13 @@ import { glob } from '../utils'
 import { ModelJSON } from '../models/Model'
 import { AppInitializer } from './modelInitilizer'
 
-export default async function initSchemas({ app }: AppInitializer): Promise<AppInitializer> {
+export default async function initSchemas({
+  app,
+  mongoClient,
+  Db,
+  modules,
+  schema,
+}: AppInitializer): Promise<AppInitializer> {
   const files: string[] = await glob('**/*/*.schema.json', {
     cwd: path.join(process.cwd(), './src'),
   })
@@ -15,5 +21,5 @@ export default async function initSchemas({ app }: AppInitializer): Promise<AppI
 
   configs.forEach((config: ModelJSON) => new Schema(config))
 
-  return { app }
+  return { app, mongoClient, Db, modules, schema }
 }

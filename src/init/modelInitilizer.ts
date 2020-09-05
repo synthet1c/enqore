@@ -5,11 +5,14 @@ import globby from 'globby'
 import Extendable, { ExtendableConfig, Config } from '../models/Extendable'
 import { GraphQLSchema } from 'graphql'
 import Module from '../models/Module'
+import { MongoClient, Db } from 'mongodb'
 
 export interface AppInitializer {
   app: Server
   schema?: GraphQLSchema,
-  modules?: Module[]
+  modules?: Module[],
+  Db?: Db,
+  mongoClient?: MongoClient
 }
 
 export default function modelInitializer(initializerConfig: InitializerConfig) {

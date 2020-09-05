@@ -36,7 +36,7 @@ export interface FileConfig {
 
 const loadFile = (...paths: any[]) => async (x: any): Promise<any> => {
   if (paths.some(p => p == null)) {
-    throw `path param is undefined`
+    throw new Error(`path param is undefined`)
   }
   return fsPromise.access(join(...paths))
     .then(x => fsPromise.readFile(resolve(...paths)))

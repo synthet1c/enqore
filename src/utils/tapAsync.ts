@@ -4,6 +4,6 @@ import { trace } from './trace'
  *
  * Tap an async function, if no value is returned tap the argument to the next function
  */
-export const tapAsync = (fn: (x: any) => Promise<any>) => (
-  x: any
-): Promise<any> => fn(x).then((y: any) => y || x)
+export const tapAsync = <X,Y>(fn: (x: X) => Promise<Y|void>) => (
+  x: X
+): Promise<X|Y> => fn(x).then((y: Y) => y || x)

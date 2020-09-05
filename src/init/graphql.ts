@@ -14,6 +14,8 @@ import { AppInitializer } from './modelInitilizer'
 
 export default async function initGraphql({
   app,
+  Db,
+  mongoClient,
 }: AppInitializer): Promise<AppInitializer> {
   // console.log('schema', Schema.getRootQueryObject())
 
@@ -91,5 +93,5 @@ export default async function initGraphql({
     })
   )
 
-  return { app, schema }
+  return { app, schema, Db, mongoClient }
 }

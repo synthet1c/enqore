@@ -38,7 +38,7 @@ export default class RootQuery {
   }
 
   parseFieldDirectives(fields: ModelFields): void {
-    for (let [key, modelField] of Object.entries(fields)) {
+    for (const [key, modelField] of Object.entries(fields)) {
       if (modelField?.findable) {
         this.findable.push(key)
       }
@@ -158,7 +158,7 @@ export default class RootQuery {
     const args: any = {}
     const fieldName = capitalize(singular(this.schema.table))
     const schemaName = singular(this.schema.name)
-    for (let [key, modelField] of Object.entries(fields)) {
+    for (const [key, modelField] of Object.entries(fields)) {
       if (modelField?.field === 'field') {
         args[key] = {
           type: modelField?.required

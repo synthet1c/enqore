@@ -43,8 +43,8 @@ export default class ORM {
             type: ORM.createSearchField(schema, field, WhereType),
           }
         }
-        _fields['_and'] = { type: GraphQLList(WhereType) }
-        _fields['_or'] = { type: GraphQLList(WhereType) }
+        _fields._and = { type: GraphQLList(WhereType) }
+        _fields._or = { type: GraphQLList(WhereType) }
         return _fields
       },
     })

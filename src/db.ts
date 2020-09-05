@@ -25,7 +25,7 @@ export interface Book {
 export interface File {
   id: number
   _data: Record
-  _file: Array<Record>
+  _file: Record[]
 }
 
 export const readJSON = (file: string) => (): Promise<ModelJSON | JSON | any> =>

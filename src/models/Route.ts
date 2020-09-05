@@ -11,6 +11,7 @@ import { File } from '../utils/readFile'
 import Base, { BaseConfig } from './Base'
 import { omit, tap } from 'rambda'
 import Component from './Component'
+import { Db } from 'mongodb'
 
 const omitPrivates = omit(['_cache', '_schema'])
 
@@ -20,6 +21,7 @@ export default class Route extends Base {
   protected _config: RouteConfig
   protected controller: any
   protected _schema: GraphQLSchema
+  protected Db: Db
   public data: any
   public fields: any
   public get: object
@@ -49,6 +51,22 @@ export default class Route extends Base {
     })
   }
 
+  public async init(
+    app: Server,
+    parent: Module,
+    schema: GraphQLSchema,
+    Db: Db
+  ) {
+    this._schema = schema
+    this.parent = parent
+    this.Db = Db
+    return this.controller.init(this).then(
+      tap((x: any) => {
+        app.get(parent.url + this.url, this.onRoute)
+      })
+    )
+  }
+
   private getData() {
     if (this.controller.data) {
       // this.query = readFile()
@@ -69,7 +87,14 @@ export default class Route extends Base {
       },
     }
 
-    return Promise.resolve(data)
+    return Promise.all([
+      this.Db.collection('users').findOne({}),
+      data
+    ])
+      .then(([user, data]) => ({
+        ...data,
+        user,
+      }))
       .then((data: any) => {
         if (!this.controller.query) return data
 
@@ -96,12 +121,11 @@ export default class Route extends Base {
   }
 
   private createResponse(data: any, req: Request) {
-
     console.log('createResponse', data)
     const modules = Array.from(Module.entries()).map(([key, module]) => {
       return {
         url: module.url,
-        routes: module.routes.map((route: any) => route.url)
+        routes: module.routes.map((route: any) => route.url),
       }
     })
 
@@ -123,15 +147,6 @@ export default class Route extends Base {
       meta: evalObject(this.controller.layout.meta)(data),
       data,
     }
-  }
-
-  public async init(app: Server, parent: Module, schema: GraphQLSchema) {
-    this._schema = schema
-    this.parent = parent
-    return this.controller.init(this).then((x: any) => {
-      app.get(parent.url + this.url, this.onRoute)
-      return x
-    })
   }
 
   static convertUrl(url: string) {
