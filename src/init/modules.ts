@@ -1,18 +1,14 @@
 import modelInitializer, { AppInitializer } from './modelInitilizer'
 import Module, { ModuleConfig } from '../models/Module'
-import { Server, Request, Response } from 'express'
 import globby from 'globby'
 import path from 'path'
 import readFile from '../utils/readFile'
-import { GraphQLSchema } from 'graphql'
-import { tap } from 'rambda'
-// import { readJSON } from '../db'
 
-export default async function initializeModules({
-  app,
-  Db,
-  schema,
-}: AppInitializer): Promise<AppInitializer> {
+export default async function initializeModules(
+  initializer: AppInitializer
+): Promise<AppInitializer> {
+  const { app, Db, schema } = initializer
+
   const files: string[] = await globby('**/*/*.module.json', {
     cwd: path.join(process.cwd(), './src'),
   })
@@ -22,15 +18,12 @@ export default async function initializeModules({
   const _modules = modules.map((module: any) => new Module(module))
 
   // initialize all the modules
-  return Promise.all(_modules.map((module) => module.init(app, schema, Db)))
-    .then(tap((responses: any) => {
-      console.log(_modules)
-    }))
-    .then((x: any) => ({
-      app,
-      schema,
-      modules: _modules,
-    }))
+  await Promise.all(
+    _modules.map((module) => module.init(app, schema, Db))
+  )
 
-
+  return {
+    ...initializer,
+    modules: _modules,
+  }
 }

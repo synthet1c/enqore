@@ -11,6 +11,8 @@ import {
   initSchemas,
   initSession,
   initMongoDB,
+  wipeMongoDBCollections,
+  cleanupMongoDBConnection,
 } from './init'
 import { tapAsync, evalObject, trace } from './utils'
 
@@ -21,6 +23,7 @@ Promise.resolve({ app })
   .then(tapAsync(initRequestParser))
   .then(tapAsync(initSession))
   .then(tapAsync(initMongoDB))
+  .then(tapAsync(wipeMongoDBCollections))
   .then(tapAsync(initFields))
   .then(tapAsync(initComponents))
   // .then(tapAsync(initLayouts))
@@ -29,3 +32,4 @@ Promise.resolve({ app })
   // .then(tapAsync(initRoutes))
   .then(tapAsync(initModules))
   .then(tapAsync(initListener))
+  .then(tapAsync(cleanupMongoDBConnection))
